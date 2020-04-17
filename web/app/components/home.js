@@ -38,88 +38,96 @@ let dataSource = [
     }
 ]
 
-// const dataSource = [
-//     {
-//       key: '1',
-//       name: '胡彦斌',
-//       age: 32,
-//       address: '西湖区湖底公园1号',
-//     },
-//     {
-//       key: '2',
-//       name: '胡彦祖',
-//       age: 42,
-//       address: '西湖区湖底公园1号',
-//     },
-//   ];
-  
-//   const columns = [
-//     {
-//       title: '姓名',
-//       dataIndex: 'name',
-//       key: 'name',
-//     },
-//     {
-//       title: '年龄',
-//       dataIndex: 'age',
-//       key: 'age',
-//     },
-//     {
-//       title: '住址',
-//       dataIndex: 'address',
-//       key: 'address',
-//     },
-//   ];
   
 export default class Home extends Component {
-    state={
-        data: [],
-        item11: '',
-        item12: '',
-        item13: '',
-        item14: '',
-        item15: '',
-        item16: '',
-        item17: '',
-        item18: '',
-
-        item21: '',
-        item22: '',
-        item23: '',
-        item24: '',
-        item25: '',
-        item26: '',
-        item27: '',
-        item28: '',
-
-        item31: '',
-        item32: '',
-        item33: '',
-        item34: '',
-        item35: '',
-        item36: '',
-        item37: '',
-        item38: '',
-
-        item41: '',
-        item42: '',
-        item43: '',
-        item44: '',
-        item45: '',
-        item46: '',
-        item47: '',
-        item48: '',
+    constructor(props) {
+        super(props);
+        this.state={
+            data: [],
+            item11: '',
+            item12: '',
+            item13: '',
+            item14: '',
+            item15: '',
+            item16: '',
+            item17: '',
+            item18: '',
+    
+            item21: '',
+            item22: '',
+            item23: '',
+            item24: '',
+            item25: '',
+            item26: '',
+            item27: '',
+            item28: '',
+    
+            item31: '',
+            item32: '',
+            item33: '',
+            item34: '',
+            item35: '',
+            item36: '',
+            item37: '',
+            item38: '',
+    
+            item41: '',
+            item42: '',
+            item43: '',
+            item44: '',
+            item45: '',
+            item46: '',
+            item47: '',
+            item48: '',
+        }
     }
+    
 
     fetch(params = {}) {
         this.setState({ loading: true });
         auth.fetch('/query','get',params,(result)=>{
             console.log("------------------");
             console.log(result);
-            this.setState({
-                data: result
-            })
-    });
+            this.initData(result);
+        });
+    }
+
+    initData(data) {
+        data.forEach(element => {
+            if ('11' == element.location) {
+                this.setState({
+                    item11: element
+                })
+            } else if ('12' == element.location) {
+                this.setState({
+                    item12: element
+                })
+            } else if ('13' == element.location) {
+                this.setState({
+                    item13: element
+                })
+            } else if ('14' == element.location) {
+                this.setState({
+                    item14: element
+                })
+            } else if ('15' == element.location) {
+                this.setState({
+                    item15: element
+                })
+            } else if ('16' == element.location) {
+                this.setState({
+                    item16: element
+                })
+            } else if ('17' == element.location) {
+                this.setState({
+                    item17: element
+                })
+            } else if ('18' == element.location) {
+                this.setState({
+                    item18: element
+                })
+            }
+        })
     }
 
     componentWillMount(){
@@ -144,51 +152,66 @@ export default class Home extends Component {
         )
         }
     }
+
+    onSelect(item) {
+        if (item.state == 'NONE') {
+            const item11 = item;
+            item11.state = 'DISPLAY';
+            this.setState({
+                item11
+            });
+        }
+        
+    }
     render() {
-        const { item11 } = this.state;
+        const { item11, item12, item13, item14, item15, item16, item17, item18,
+                item21, item22, item23, item24, item25, item26, item27, item28,
+                item31, item32, item33, item34, item35, item36, item37, item38,
+                item41, item42, item43, item44, item45, item46, item47, item48 } = this.state;
         return (
             <div className="btn-margin">
                 <div className="monitor-frame">
                     <div className="chess-container">
                         <Row>
                             <Col span={3}>
-                                <Button shape="circle">
+                                <Button shape="circle"
+                                    onClick={this.onSelect.bind(this,item11)}>
                                     {item11.state == 'DISPLAY' ? item11.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    士
+                                {item12.state == 'DISPLAY' ? item12.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    士
+                                    {item13.state == 'DISPLAY' ? item13.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    相
+                                    {item14.state == 'DISPLAY' ? item14.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    相
+                                    {item15.state == 'DISPLAY' ? item15.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    马
+                                    {item16.state == 'DISPLAY' ? item16.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    马
+                                    {item17.state == 'DISPLAY' ? item17.name : ''}
                                 </Button>
                             </Col>
                             <Col span={3}>
                                 <Button shape="circle">
-                                    车
+                                    {item18.state == 'DISPLAY' ? item18.name : ''}
                                 </Button>
                             </Col>
                         </Row>
