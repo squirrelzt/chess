@@ -1,0 +1,18 @@
+{
+  "data": [{
+    "key": "1",
+    "cname":"测试",
+    "username":"hutx",
+    "sex": "1",
+    "mobile": "1",
+    "email": "1",
+    "administrator": "1",
+    "inserter": "1",
+    "insertertime": "1",
+    "updater": "1",
+    "updatertime": "1"
+  }],
+  "totalCount": 1,
+  "pageSize": 10,
+  "currentPage": 1
+}
