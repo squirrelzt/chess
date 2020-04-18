@@ -18,4 +18,14 @@ public class ChessServiceImpl implements ChessService {
     public List<ChessDomain> query() {
         return chessMapper.query();
     }
+
+    @Override
+    public boolean reverseChess(String id) {
+        int count = chessMapper.reverseChess(id);
+        if (1 == count) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ChessDomain {
+    private String id;
     private String name;
     private String color;
     private String x;

@@ -13,4 +13,6 @@ public interface ChesserMapper {
     List<ChesserDomain> login(String username, String password);
 
     List<ChesserDomain> queryChesserById(String id);
+
+    int firstReverseChess(String side, String id);
 }

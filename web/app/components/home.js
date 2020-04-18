@@ -72,23 +72,48 @@ export default class Home extends Component {
         if (!item) {
             return;
         }
-        this.setState({
-            selectedItem: item
-        })
-        this.reverseChess(item);
-        
+        // 判断此棋子是否已翻开
+        if (item.state='NONE') {
+            this.reverseChess(item);
+        } else {
+            this.setState({
+                selectedItem: item
+            })
+        }
     }
 
     // 翻子
     reverseChess(item) {
-        // 判断当前棋子是否处于显示状态
-        if (item.state == 'NONE') {
-            let items = this.state.items;
-            items[item.x-1][item.y-1].state = 'DISPLAY'; 
-            this.setState({
-                items
-            });
+        let items = this.state.items;
+        let semaphore;
+        items[item.x-1][item.y-1].state = 'DISPLAY'; 
+        const role = localStorage.getItem('role');
+        if (role == 'consumer') {
+            semaphore = 0;
+        } else if (role == 'producer') {
+            semaphore = 1;
+        } else if (!role) {
+            //TODO 第一次翻子
+            semaphore = 0;
+            this.firstReverseChess(item.id, item.color);
         }
+        this.setState({
+            items,
+            semaphore
+        });
+    }
+    //第一次翻子
+    firstReverseChess(itemId,itemColor) {
+        localStorage.setItem('role','consumer');
+        const chesserId = localStorage.getItem('id');
+        let params = {
+            id: itemId,
+            chesserId,
+            side: itemColor
+        }
+        auth.fetch('/firstReverseChess','get',params,(result)=>{
+            console.log(result)
+        });
     }
     render() {
         const { items, selectedItem, selectedItemBackgroudColor, started, semaphore, role } = this.state;

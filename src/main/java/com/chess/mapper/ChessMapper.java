@@ -11,4 +11,6 @@ import java.util.List;
 public interface ChessMapper {
 
     List<ChessDomain> query();
+
+    int reverseChess(String id);
 }

@@ -29,4 +29,8 @@
             </if>
         </where>
     </select>
+
+    <update id="firstReverseChess">
+        update chesser set role = 'consumer', state = 'lock', side = #{side} where id = #{id}
+    </update>
 </mapper>

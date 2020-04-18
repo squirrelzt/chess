@@ -37,4 +37,14 @@ public class ChesserServiceImpl implements ChesserService {
             return list.get(0);
         }
     }
+
+    @Override
+    public boolean firstReverseChess(String id, String side) {
+        int count = chesserMapper.firstReverseChess(side, id);
+        if (1 == count) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
