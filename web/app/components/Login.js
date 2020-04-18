@@ -44,9 +44,6 @@ export default class Login extends Component {
         });
     }
     handleSubmit(e) {
-        // console.log('-------------------')
-        // console.log(this.state.username)
-        // console.log(this.state.password)
         this.fetch({
             username: this.state.username,
             password: this.state.password
