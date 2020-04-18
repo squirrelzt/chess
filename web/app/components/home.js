@@ -44,6 +44,8 @@ export default class Home extends Component {
         super(props);
         this.state={
             items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
+            selectedItem: '',
+            selectedItemBackgroudColor: '#6387ea',
             data: [],
             item11: '',
             item12: '',
@@ -171,7 +173,9 @@ export default class Home extends Component {
         if (!item) {
             return;
         }
-
+        this.setState({
+            selectedItem: item
+        })
         this.reverseChess(item);
         
     }
@@ -193,14 +197,14 @@ export default class Home extends Component {
         const { item11, item12, item13, item14, item15, item16, item17, item18,
                 item21, item22, item23, item24, item25, item26, item27, item28,
                 item31, item32, item33, item34, item35, item36, item37, item38,
-                item41, item42, item43, item44, item45, item46, item47, item48, items } = this.state;
+                item41, item42, item43, item44, item45, item46, item47, item48, items, selectedItem, selectedItemBackgroudColor } = this.state;
         return (
             <div className="btn-margin">
                 <div className="monitor-frame">
                     <div className="chess-container">
                         <Row>
                             <Col span={3}>
-                                <Button shape="circle"
+                                <Button shape="circle" type='primary'
                                     onClick={this.onSelect.bind(this,item11)}>
                                     {item11.state == 'DISPLAY' ? item11.name : ''}
                                 </Button>
@@ -248,7 +252,9 @@ export default class Home extends Component {
                                         return (
                                             <Col span={3} key={colIndex}>
                                                 <Button shape="circle" 
-                                                style={{color:colItem?colItem.color:'#fff'}}
+                                                style={{color:colItem?colItem.color:'#fff',
+                                                        backgroundColor: selectedItem && (selectedItem.x == colItem.x &&
+                                                            selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan'}}
                                                 onClick={this.onSelect.bind(this, colItem)}>
                                                     {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
