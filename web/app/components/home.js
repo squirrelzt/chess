@@ -94,6 +94,17 @@ export default class Home extends Component {
     }
 
     initData(data) {
+        const items = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']];
+
+        data.forEach(element => {
+            items[element.x-1][element.y-1] = element;
+        });
+        // console.log('==========')
+        // console.log(items)
+        this.setState({
+            items
+        })
+
         data.forEach(element => {
             if ('11' == element.location) {
                 this.setState({
@@ -165,6 +176,7 @@ export default class Home extends Component {
         
     }
     render() {
+        console.log('+++++++++++++++')
         console.log(this.state.items)
         const { item11, item12, item13, item14, item15, item16, item17, item18,
                 item21, item22, item23, item24, item25, item26, item27, item28,
@@ -222,7 +234,11 @@ export default class Home extends Component {
                                 <Row key={rowIndex}>
                                     {rowItem.map((colItem, colIndex) => {
                                         return (
-                                        <Col span={3} key={colIndex}>{colIndex}</Col>
+                                            <Col span={3} key={colIndex}>
+                                                <Button shape="circle">
+                                                    {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
+                                                </Button>
+                                            </Col>
                                         )
                                     })
                                     }
