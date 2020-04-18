@@ -87,8 +87,8 @@ export default class Home extends Component {
     fetch(params = {}) {
         this.setState({ loading: true });
         auth.fetch('/query','get',params,(result)=>{
-            console.log("------------------");
-            console.log(result);
+            // console.log("------------------");
+            // console.log(result);
             this.initData(result);
         });
     }
@@ -176,8 +176,8 @@ export default class Home extends Component {
         
     }
     render() {
-        console.log('+++++++++++++++')
-        console.log(this.state.items)
+        // console.log('+++++++++++++++')
+        // console.log(this.state.items)
         const { item11, item12, item13, item14, item15, item16, item17, item18,
                 item21, item22, item23, item24, item25, item26, item27, item28,
                 item31, item32, item33, item34, item35, item36, item37, item38,
@@ -235,7 +235,7 @@ export default class Home extends Component {
                                     {rowItem.map((colItem, colIndex) => {
                                         return (
                                             <Col span={3} key={colIndex}>
-                                                <Button shape="circle">
+                                                <Button shape="circle" style={{color:colItem?colItem.color:'#fff'}}>
                                                     {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
                                             </Col>

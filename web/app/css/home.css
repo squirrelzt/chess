@@ -49,4 +49,9 @@
     width: 70px !important;
     height: 70px !important;
     background-color: tan !important;
+    font-size: 30px !important;
+    font-family: '楷体' !important;
+    font-weight: bold !important;
+    /* color: crimson !important; */
+    /* color: black !important; */
 }
