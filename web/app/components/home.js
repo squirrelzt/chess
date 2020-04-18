@@ -43,6 +43,7 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state={
+            items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
             data: [],
             item11: '',
             item12: '',
@@ -164,10 +165,11 @@ export default class Home extends Component {
         
     }
     render() {
+        console.log(this.state.items)
         const { item11, item12, item13, item14, item15, item16, item17, item18,
                 item21, item22, item23, item24, item25, item26, item27, item28,
                 item31, item32, item33, item34, item35, item36, item37, item38,
-                item41, item42, item43, item44, item45, item46, item47, item48 } = this.state;
+                item41, item42, item43, item44, item45, item46, item47, item48, items } = this.state;
         return (
             <div className="btn-margin">
                 <div className="monitor-frame">
@@ -215,6 +217,19 @@ export default class Home extends Component {
                                 </Button>
                             </Col>
                         </Row>
+                        {items.map((rowItem,rowIndex)=>{
+                            return (
+                                <Row key={rowIndex}>
+                                    {rowItem.map((colItem, colIndex) => {
+                                        return (
+                                        <Col span={3} key={colIndex}>{colIndex}</Col>
+                                        )
+                                    })
+                                    }
+                                </Row>
+                            )
+                        })
+                        }
                     </div>
                 </div>
             </div>

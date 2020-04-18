@@ -38,7 +38,7 @@
     background-color: peru;
 }
 .ant-row {
-    height: 100px !important;
+    /* height: 100px !important; */
     line-height: 100px !important;
 }
 .ant-col-3 {
