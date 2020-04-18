@@ -19,7 +19,7 @@ public class ChesserController {
     @Autowired
     ChessService chessService;
 
-    @GetMapping("login")
+//    @GetMapping("login")
     public Map login(@RequestParam String username, @RequestParam String password) {
         ChesserDomain chesserDomain = chesserService.login(username, password);
         Map<String, Object> map = new HashMap<>(2);
@@ -32,12 +32,12 @@ public class ChesserController {
         return map;
     }
 
-    @GetMapping("queryChesserById")
+//    @GetMapping("queryChesserById")
     public ChesserDomain queryChesserById(@RequestParam String id) {
         return chesserService.queryChesserById(id);
     }
 
-    @RequestMapping("firstReverseChess")
+//    @RequestMapping("firstReverseChess")
     public Map firstReverseChess(@RequestParam String id, @RequestParam String chesserId,@RequestParam String side) {
         Map<String, Object> map = new HashMap<>(2);
         boolean count = chessService.reverseChess(id);

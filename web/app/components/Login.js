@@ -42,6 +42,7 @@ export default class Login extends Component {
                 result.data.username ? localStorage.setItem('username', result.data.username):'';
                 result.data.state ? localStorage.setItem('state', result.data.state):'';
                 result.data.role ? localStorage.setItem('role', result.data.role):'';
+                result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
                 window.location.href="/chess";
             } else if (result.result == 1) {
                 this.setState({
