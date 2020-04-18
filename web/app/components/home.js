@@ -165,15 +165,27 @@ export default class Home extends Component {
         }
     }
 
+    // 点击棋子
     onSelect(item) {
+        // 未加载数据，返回
+        if (!item) {
+            return;
+        }
+
+        this.reverseChess(item);
+        
+    }
+
+    // 翻子
+    reverseChess(item) {
+        // 判断当前棋子是否处于显示状态
         if (item.state == 'NONE') {
-            const item11 = item;
-            item11.state = 'DISPLAY';
+            let items = this.state.items;
+            items[item.x-1][item.y-1].state = 'DISPLAY'; 
             this.setState({
-                item11
+                items
             });
         }
-        
     }
     render() {
         // console.log('+++++++++++++++')
@@ -235,7 +247,9 @@ export default class Home extends Component {
                                     {rowItem.map((colItem, colIndex) => {
                                         return (
                                             <Col span={3} key={colIndex}>
-                                                <Button shape="circle" style={{color:colItem?colItem.color:'#fff'}}>
+                                                <Button shape="circle" 
+                                                style={{color:colItem?colItem.color:'#fff'}}
+                                                onClick={this.onSelect.bind(this, colItem)}>
                                                     {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
                                             </Col>
