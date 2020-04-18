@@ -3,21 +3,6 @@ import {  Form, Icon, Row, Col, Button, message, Input, Checkbox } from 'antd';
 import auth from '../common/auth';
 import '../css/login.css'
 
-
-const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
-  const tailLayout = {
-    wrapperCol: {
-      offset: 8,
-      span: 16,
-    },
-  };
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +12,7 @@ export default class Login extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
 
     }
 
@@ -53,9 +38,10 @@ export default class Login extends Component {
         this.setState({ loading: true });
         auth.fetch('/login','get',params,(result)=>{
             if (result.result == 0) {
-                result.data.username ? localStorage.setItem('username', result.username):'';
-                result.data.state ? localStorage.setItem('state', result.state):'';
-                result.data.role ? localStorage.setItem('role', result.role):'';
+                result.data.id ? localStorage.setItem('id', result.data.id):'';
+                result.data.username ? localStorage.setItem('username', result.data.username):'';
+                result.data.state ? localStorage.setItem('state', result.data.state):'';
+                result.data.role ? localStorage.setItem('role', result.data.role):'';
                 window.location.href="/chess";
             } else if (result.result == 1) {
                 this.setState({

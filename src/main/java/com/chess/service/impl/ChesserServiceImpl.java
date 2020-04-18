@@ -22,6 +22,18 @@ public class ChesserServiceImpl implements ChesserService {
         if (list.isEmpty()) {
             return null;
         } else {
+            log.info(list.toString());
+            return list.get(0);
+        }
+    }
+
+    @Override
+    public ChesserDomain queryChesserById(String id) {
+        List<ChesserDomain> list = chesserMapper.queryChesserById(id);
+        if (list.isEmpty()) {
+            return null;
+        } else {
+            log.info(list.toString());
             return list.get(0);
         }
     }

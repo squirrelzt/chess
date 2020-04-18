@@ -29,4 +29,9 @@ public class ChesserController {
         map.put("data", chesserDomain);
         return map;
     }
+
+    @GetMapping("queryChesserById")
+    public ChesserDomain queryChesserById(@RequestParam String id) {
+        return chesserService.queryChesserById(id);
+    }
 }

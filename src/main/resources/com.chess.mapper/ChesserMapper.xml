@@ -20,4 +20,13 @@
         </if>
     </where>
   </select>
+
+    <select id="queryChesserById" resultMap="BaseResultMap">
+        select id, username, side, state, role from chesser
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -11,4 +11,6 @@ import java.util.List;
 public interface ChesserMapper {
 
     List<ChesserDomain> login(String username, String password);
+
+    List<ChesserDomain> queryChesserById(String id);
 }
