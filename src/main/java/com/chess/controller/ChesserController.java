@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class ChesserController {
@@ -15,7 +18,15 @@ public class ChesserController {
     ChesserService chesserService;
 
     @GetMapping("login")
-    public List<ChesserDomain> login(@RequestParam String username, @RequestParam String password) {
-        return chesserService.login(username, password);
+    public Map login(@RequestParam String username, @RequestParam String password) {
+        ChesserDomain chesserDomain = chesserService.login(username, password);
+        Map<String, Object> map = new HashMap<>(2);
+        if (Objects.isNull(chesserDomain)) {
+            map.put("result", 1);
+        } else {
+            map.put("result", 0);
+        }
+        map.put("data", chesserDomain);
+        return map;
     }
 }

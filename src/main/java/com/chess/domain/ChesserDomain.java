@@ -9,4 +9,5 @@ public class ChesserDomain {
 //    private String password;
     private String side;
     private String state;
+    private String role;
 }

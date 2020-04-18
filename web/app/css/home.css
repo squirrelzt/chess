@@ -37,7 +37,7 @@
 .chess-container {
     background-color: peru;
 }
-.ant-row {
+.chess-container .ant-row {
     /* height: 100px !important; */
     line-height: 100px !important;
 }

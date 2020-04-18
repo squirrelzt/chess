@@ -17,10 +17,12 @@ public class ChesserServiceImpl implements ChesserService {
     ChesserMapper chesserMapper;
 
     @Override
-    public List<ChesserDomain> login(String username, String password) {
+    public ChesserDomain login(String username, String password) {
         List<ChesserDomain> list = chesserMapper.login(username, password);
-        log.info("------------------");
-        log.info(list.toString());
-        return list;
+        if (list.isEmpty()) {
+            return null;
+        } else {
+            return list.get(0);
+        }
     }
 }

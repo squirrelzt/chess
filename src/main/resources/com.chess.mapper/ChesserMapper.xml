@@ -7,6 +7,7 @@
 <!--    <result column="password" jdbcType="VARCHAR" property="password" />-->
     <result column="side" jdbcType="VARCHAR" property="side" />
     <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
   </resultMap>
   <select id="login" resultMap="BaseResultMap">
     select * from chesser

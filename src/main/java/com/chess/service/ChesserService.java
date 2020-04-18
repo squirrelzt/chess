@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ChesserService {
 
-    List<ChesserDomain> login(String username, String password);
+    ChesserDomain login(String username, String password);
 }
