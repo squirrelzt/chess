@@ -1,6 +1,5 @@
 package com.chess.service.impl;
 
-import com.chess.domain.ChesserDomain;
 import com.chess.domain.PersonDomain;
 import com.chess.mapper.PersonMapper;
 import com.chess.service.PersonService;

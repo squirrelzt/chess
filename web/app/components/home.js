@@ -12,7 +12,7 @@ export default class Home extends Component {
             data: [],
             started: false,
             semaphore: 1,
-            role: 'consumer'
+            role: 'CONSUMER'
         }
     }
     
@@ -46,18 +46,18 @@ export default class Home extends Component {
 
     //初始化页面时查询页面状态是active还是lock
     fetchChesserById(params) {
-        auth.fetch('/queryChesserById','get',params,(result)=>{
+        auth.fetch('/queryPersonById','get',params,(result)=>{
             const state = localStorage.setItem('state', result.state);
             const role = localStorage.getItem('role', result.role);
             if (state) {
                 let semaphore = 0;
-                if (state == 'active' && role == 'consumer') {
+                if (state == 'active' && role == 'CONSUMER') {
                     semaphore = 1;
-                } else if (state == 'active' && role == 'producer') {
+                } else if (state == 'active' && role == 'PRODUCER') {
                     semaphore = 0;
-                } else if (state == 'lock' && role == 'consumer') {
+                } else if (state == 'lock' && role == 'CONSUMER') {
                     semaphore = 0;
-                } else if (state == 'lock' && role == 'producer') {
+                } else if (state == 'lock' && role == 'PRODUCER') {
                     semaphore = 1;
                 }
                 this.setState({
@@ -88,9 +88,9 @@ export default class Home extends Component {
         let semaphore;
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
         const role = localStorage.getItem('role');
-        if (role == 'consumer') {
+        if (role == 'CONSUMER') {
             semaphore = 0;
-        } else if (role == 'producer') {
+        } else if (role == 'PRODUCER') {
             semaphore = 1;
         } else if (!role) {
             //TODO 第一次翻子
@@ -104,15 +104,16 @@ export default class Home extends Component {
     }
     //第一次翻子
     firstReverseChess(itemId,itemColor) {
-        localStorage.setItem('role','consumer');
-        const chesserId = localStorage.getItem('id');
+        localStorage.setItem('role','CONSUMER');
+        const personId = localStorage.getItem('id');
+        const opponentId = localStorage.getItem('opponentId');
         let params = {
-            id: itemId,
-            chesserId,
-            side: itemColor
+            chessId: itemId,
+            personId,
+            opponentId,
+            color: itemColor
         }
         auth.fetch('/firstReverseChess','get',params,(result)=>{
-            console.log(result)
         });
     }
     render() {
@@ -132,7 +133,7 @@ export default class Home extends Component {
                                                         backgroundColor: selectedItem && (selectedItem.x == colItem.x &&
                                                             selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan'}}
                                                 onClick={this.onSelect.bind(this, colItem)}
-                                                disabled={(role=='consumer'&&semaphore==0)||(role=='producer'&&semaphore==1)}>
+                                                disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
                                                     {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
                                             </Col>

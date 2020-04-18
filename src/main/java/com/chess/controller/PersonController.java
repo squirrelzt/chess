@@ -1,6 +1,5 @@
 package com.chess.controller;
 
-import com.chess.domain.ChesserDomain;
 import com.chess.domain.PersonDomain;
 import com.chess.service.ChessService;
 import com.chess.service.PersonService;
