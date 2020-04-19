@@ -19,6 +19,7 @@ export default class Home extends Component {
     
     fetch(params = {}) {
         auth.fetch('/query','get',params,(result)=>{
+            console.log(result)
             this.initData(result);
         });
     }
@@ -116,7 +117,10 @@ export default class Home extends Component {
             message.error('不同行或列的数据不能进行操作');
             return;
         }
+        // 兑子
+        if (this.state.selectedItem.code == selectedOpponentItem.code) {
 
+        }
 
     }
     

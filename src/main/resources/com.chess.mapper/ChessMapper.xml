@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.chess.domain.ChessDomain">
     <result column="id" jdbcType="VARCHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="color" jdbcType="VARCHAR" property="color" />
     <result column="x" jdbcType="VARCHAR" property="x" />
     <result column="y" jdbcType="VARCHAR" property="y" />

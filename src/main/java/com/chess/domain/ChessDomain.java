@@ -6,6 +6,7 @@ import lombok.Data;
 public class ChessDomain {
     private String id;
     private String name;
+    private String code;
     private String color;
     private String x;
     private String y;
