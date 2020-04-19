@@ -56,8 +56,10 @@ public class ChessServiceImpl implements ChessService {
     public boolean order() {
         String[] xArray = InitDataConstants.xArray;
         String[] yArray = InitDataConstants.yArray;
-        shufflecard(xArray);
-        shufflecard(yArray);
+        String[] locationArray = InitDataConstants.locationArray;
+        shufflecard(locationArray);
+//        shufflecard(xArray);
+//        shufflecard(yArray);
 
 //        for (int i = 0; i < xArray.length; i++) {
 //            if ((i+1)%8 ==0) {
@@ -75,10 +77,12 @@ public class ChessServiceImpl implements ChessService {
         int count = 0;
         for (int i = 0; i < 32; i++) {
             int id = i+1;
-            String x = xArray[i];
-            String y = yArray[i];
-            String location = x + "" + y;
-//            System.out.println(x + "\t" + y + "\t" + location);
+//            String x = xArray[i];
+//            String y = yArray[i];
+            String location = locationArray[i];
+            String x = location.substring(0, 1);
+            String y = location.substring(1, 2);
+            System.out.println(x + "\t" + y + "\t" + location);
             count += chessMapper.shufflecard(""+id, x, y, location);
         }
         if (count == 32) {
