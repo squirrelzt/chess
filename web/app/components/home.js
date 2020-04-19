@@ -75,7 +75,6 @@ export default class Home extends Component {
             semaphore = 1;
         }
         this.setState({
-            selectedItem: '',
             semaphore,
             role
         })
@@ -132,10 +131,11 @@ export default class Home extends Component {
         } else if (state == 'LOCK') {
             state = 'ACTIVE';
         }
+        
         this.lockFrame(state, localStorage.getItem('role'));
         // 兑子
         if (this.state.selectedItem.code == selectedOpponentItem.code) {
-
+            
         }
 
     }
