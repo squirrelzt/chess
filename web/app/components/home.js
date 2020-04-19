@@ -8,6 +8,7 @@ export default class Home extends Component {
         this.state={
             items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
             selectedItem: '',
+            selectedOpponentItem: '',
             selectedItemBackgroudColor: '#6387ea',
             data: [],
             started: false,
@@ -80,15 +81,38 @@ export default class Home extends Component {
             return;
         }
         // 判断此棋子是否已翻开
-        if (item.state='NONE') {
-            this.reverseChess(item);
-        } else {
+        if (item.state == 'NONE') {
             this.setState({
-                selectedItem: item
+                selectedItem: '',
+                selectedOpponentItem: ''
             })
+            this.reverseChess(item);
+        } else if (item.state == 'DISPLAY') {
+            console.log('------------------')
+            console.log(item)
+            if (!this.state.selectedItem) {
+                // 选中要操作的棋子
+                this.setState({
+                    selectedItem: item
+                })
+            } else {
+                this.operateChess(item);
+            }
+            
         }
     }
 
+    operateChess(selectedOpponentItem) {
+        const selectedX = this.state.selectedItem.x;
+        const selectedY = this.state.selectedItem.y;
+        if (selectedX != selectedOpponentItem.x && selectedY != selectedOpponentItem.y) {
+            message.error('不同行或列的数据不能进行操作');
+            return;
+        }
+        
+
+    }
+    
     // 翻子
     reverseChess(item) {
         let items = this.state.items;
