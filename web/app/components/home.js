@@ -19,7 +19,6 @@ export default class Home extends Component {
     
     fetch(params = {}) {
         auth.fetch('/query','get',params,(result)=>{
-            console.log(result)
             this.initData(result);
         });
     }
@@ -58,22 +57,28 @@ export default class Home extends Component {
             localStorage.setItem('role', role);
             localStorage.setItem('state', state);
             if (state && role) {
-                let semaphore = 0;
-                if (state == 'ACTIVE' && role == 'CONSUMER') {
-                    semaphore = 1;
-                } else if (state == 'ACTIVE' && role == 'PRODUCER') {
-                    semaphore = 0;
-                } else if (state == 'LOCK' && role == 'CONSUMER') {
-                    semaphore = 0;
-                } else if (state == 'LOCK' && role == 'PRODUCER') {
-                    semaphore = 1;
-                }
-                this.setState({
-                    semaphore,
-                    role
-                })
+                this.lockFrame(state, role);
             }
         });
+    }
+
+    // 锁定页面
+    lockFrame(state, role) {
+        let semaphore = 0;
+        if (state == 'ACTIVE' && role == 'CONSUMER') {
+            semaphore = 1;
+        } else if (state == 'ACTIVE' && role == 'PRODUCER') {
+            semaphore = 0;
+        } else if (state == 'LOCK' && role == 'CONSUMER') {
+            semaphore = 0;
+        } else if (state == 'LOCK' && role == 'PRODUCER') {
+            semaphore = 1;
+        }
+        this.setState({
+            selectedItem: '',
+            semaphore,
+            role
+        })
     }
     // 点击棋子
     onSelect(item) {
@@ -117,6 +122,14 @@ export default class Home extends Component {
             message.error('不同行或列的数据不能进行操作');
             return;
         }
+
+        let state = localStorage.getItem('state');
+        if (state == 'ACTIVE') {
+            state = 'LOCK';
+        } else if (state == 'LOCK') {
+            state = 'ACTIVE';
+        }
+        this.lockFrame(state, localStorage.getItem('role'));
         // 兑子
         if (this.state.selectedItem.code == selectedOpponentItem.code) {
 
