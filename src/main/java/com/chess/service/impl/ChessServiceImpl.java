@@ -33,13 +33,14 @@ public class ChessServiceImpl implements ChessService {
 //            }
             String id = chessArray[i][0];
             String name = chessArray[i][1];
-            String color = chessArray[i][2];
-            String x = chessArray[i][3];
-            String y = chessArray[i][4];
-            String state = chessArray[i][5];
-            String location = chessArray[i][6];
+            String code = chessArray[i][2];
+            String color = chessArray[i][3];
+            String x = chessArray[i][4];
+            String y = chessArray[i][5];
+            String state = chessArray[i][6];
+            String location = chessArray[i][7];
 
-            count += chessMapper.initChessData(id, name, color, x, y, state, location);
+            count += chessMapper.initChessData(id, name, code, color, x, y, state, location);
 //            System.out.println();
         }
         int resetCount = personMapper.resetPerson();
