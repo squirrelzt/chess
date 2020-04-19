@@ -8,4 +8,6 @@ public interface PersonService {
     PersonDomain queryPersonById(String id);
 
     boolean firstReverseChess(String personId, String opponentId, String color);
+
+    boolean updateState(String personId, String opponentId, String personState);
 }

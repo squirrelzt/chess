@@ -38,4 +38,8 @@
     <update id="firstReverseChessUpdateOpponent">
         update person set role = 'PRODUCER', state = 'ACTIVE', color = #{color} where id = #{id}
     </update>
+
+    <update id="updateState">
+        update person set state = #{state} where id = #{id}
+    </update>
 </mapper>

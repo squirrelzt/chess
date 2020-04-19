@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -20,12 +19,5 @@ public class ChessController {
     @GetMapping("query")
     public List<ChessDomain> listDatas() {
         return chessService.query();
-    }
-
-    private List<ChessDomain> mock() {
-        List<ChessDomain> list = new ArrayList<>(32);
-        ChessDomain chessDomain = new ChessDomain();
-        chessDomain.setName("帅");
-        return list;
     }
 }

@@ -37,22 +37,25 @@ export default class Home extends Component {
         const id = localStorage.getItem('id');
         if (id) {
             this.fetch();
+            this.fetchChesserById({id:id});
             setInterval(()=>{
                 this.fetch();
-            },2000)
-            this.fetchChesserById({id:id});
+                this.fetchChesserById({id:id});
+            },4000)
         } else {
             window.location.href="/login";
         }
         
     }
 
-    //初始化页面时查询页面状态是active还是lock
+    //查询页面状态是active还是lock
     fetchChesserById(params) {
         auth.fetch('/queryPersonById','get',params,(result)=>{
-            const state = localStorage.setItem('state', result.state);
-            const role = localStorage.getItem('role', result.role);
-            if (state) {
+            const role = result.role;
+            const state = result.state;
+            localStorage.setItem('role', role);
+            localStorage.setItem('state', state);
+            if (state && role) {
                 let semaphore = 0;
                 if (state == 'ACTIVE' && role == 'CONSUMER') {
                     semaphore = 1;
@@ -64,7 +67,8 @@ export default class Home extends Component {
                     semaphore = 1;
                 }
                 this.setState({
-                    semaphore
+                    semaphore,
+                    role
                 })
             }
         });
@@ -88,21 +92,63 @@ export default class Home extends Component {
     // 翻子
     reverseChess(item) {
         let items = this.state.items;
-        let semaphore;
+        let semaphore = this.state.semaphore;
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
         const role = localStorage.getItem('role');
         if (role == 'CONSUMER') {
             semaphore = 0;
+            this.setState({
+                items,
+                semaphore
+            });
+            this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
-        } else if (!role) {
+            this.setState({
+                items,
+                semaphore
+            });
+            this.commonReverseChess(item.id);
+        }
+         if (!role) {
             //TODO 第一次翻子
             semaphore = 0;
+            this.setState({
+                items,
+                semaphore
+            });
             this.firstReverseChess(item.id, item.color);
         }
-        this.setState({
-            items,
-            semaphore
+    }
+    commonReverseChess(itemId) {
+        const personId = localStorage.getItem('id');
+        const opponentId = localStorage.getItem('opponentId');
+        let personState = localStorage.getItem('state');
+        if (personState == 'ACTIVE') {
+            localStorage.setItem('state', 'LOCK');
+        } else if (personState == 'LOCK') {
+            localStorage.setItem('state', 'ACTIVE');
+        }
+        personState = localStorage.getItem('state');
+        let params = {
+            personId,
+            opponentId,
+            personState,
+            chessId: itemId
+        }
+        auth.fetch('/reverseChess','get',params,(result)=>{
+            if (result && result.result == 1) {
+                const state = localStorage.getItem('state');
+                let semaphore = this.state.semaphore
+                if ("PRODUCER" == state) {
+                    semaphore += 1;
+                } else if ('CONSUMER' == state) {
+                    semaphore -= 1;
+                }
+                this.setState({
+                    semaphore
+                })
+            }
         });
     }
     //第一次翻子
@@ -117,10 +163,18 @@ export default class Home extends Component {
             color: itemColor
         }
         auth.fetch('/firstReverseChess','get',params,(result)=>{
+            if (result && result.result ==0) {
+                auth.fetch('/queryPersonById','get',params,(result)=>{
+                    if (result) {
+                        localStorage.setItem('color', result.color);
+                        localStorage.setItem('state', result.state);
+                    }
+                });
+            }
         });
     }
     render() {
-        const { items, selectedItem, selectedItemBackgroudColor, started, semaphore, role } = this.state;
+        const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
         return (
             <div className="btn-margin">
                 <div className="monitor-frame">

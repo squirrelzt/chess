@@ -43,6 +43,7 @@ export default class Login extends Component {
                 result.data.state ? localStorage.setItem('state', result.data.state):'';
                 result.data.role ? localStorage.setItem('role', result.data.role):'';
                 result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
+                result.data.color ? localStorage.setItem('color', result.data.color):"";
                 window.location.href="/chess";
             } else if (result.result == 1) {
                 this.setState({

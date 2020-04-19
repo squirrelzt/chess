@@ -9,5 +9,5 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:/com.chess.mapper/**.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+ # configuration:
+ #   log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

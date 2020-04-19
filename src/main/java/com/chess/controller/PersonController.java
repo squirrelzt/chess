@@ -50,4 +50,17 @@ public class PersonController {
         }
         return map;
     }
+
+    @GetMapping("reverseChess")
+    public Map reverseChess(@RequestParam String personId, @RequestParam String opponentId, @RequestParam String personState, @RequestParam String chessId) {
+        Map<String, Object> map = new HashMap<>(2);
+        boolean count = chessService.reverseChess(chessId);
+        boolean chesserCount = personService.updateState(personId, opponentId, personState);
+        if (count && chesserCount) {
+            map.put("result", 0);
+        } else {
+            map.put("result", 1);
+        }
+        return map;
+    }
 }
