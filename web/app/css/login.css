@@ -47,3 +47,17 @@
     font-weight: bold;
 
 }
+
+
+.layout-operation {
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+}
+.layout-operation .ant-btn-primary {
+    height: 50px;
+    width: 80px;
+    margin-left: 80px;
+    margin-right: 80px;
+    font-weight: bold;
+}

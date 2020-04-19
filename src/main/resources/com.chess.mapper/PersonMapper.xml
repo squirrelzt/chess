@@ -42,4 +42,7 @@
     <update id="updateState">
         update person set state = #{state} where id = #{id}
     </update>
+    <update id="resetPerson">
+        update person set color = '', role = '', state = ''
+    </update>
 </mapper>

@@ -16,4 +16,9 @@
   <update id="reverseChess">
     update chess set state = 'DISPLAY' where id = #{id}
   </update>
+
+  <update id="initChessData">
+    update chess set name = #{name}, color = #{color}, x = #{x}, y = #{y}, state = #{state},
+    location = #{location} where id = #{id}
+  </update>
 </mapper>

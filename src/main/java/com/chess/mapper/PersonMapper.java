@@ -19,4 +19,6 @@ public interface PersonMapper {
     int firstReverseChessUpdateOpponent(@Param("id") String id, @Param("color") String color);
 
     int updateState(@Param("id") String id, @Param("state") String state);
+
+    int resetPerson();
 }
