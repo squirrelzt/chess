@@ -105,11 +105,17 @@ export default class Home extends Component {
     operateChess(selectedOpponentItem) {
         const selectedX = this.state.selectedItem.x;
         const selectedY = this.state.selectedItem.y;
+        const selectedColor = this.state.selectedItem.color;
+        // 颜色相同，重新选择
+        if (selectedColor == selectedOpponentItem.color) {
+            message.error('颜色相同的棋子不能进行操作，请重新选择');
+            return;
+        }
         if (selectedX != selectedOpponentItem.x && selectedY != selectedOpponentItem.y) {
             message.error('不同行或列的数据不能进行操作');
             return;
         }
-        
+
 
     }
     
