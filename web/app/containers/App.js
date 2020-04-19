@@ -35,6 +35,10 @@ export default class App extends Component {
           )
       }
   }
+  logout() {
+    localStorage.clear();
+    window.location.href="/login";
+  }
   render() {
     const context = this.props.children;
 
@@ -43,6 +47,10 @@ export default class App extends Component {
       <div className="layout-main" >
         <div className="header">
           <div className="title">棋牌游戏</div>
+          <div className="logout">
+              <span>当前用户: {localStorage.getItem('username')}</span>
+              <Button type="primary" size="small" className="logout-btn" onClick={this.logout}><Icon type="logout"/>退出系统</Button>
+          </div>
         </div>
 
         <div className="layout-container">
