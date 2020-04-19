@@ -43,7 +43,9 @@ public class ChessServiceImpl implements ChessService {
 //            System.out.println();
         }
         int resetCount = personMapper.resetPerson();
-        if (count == chessArray.length && resetCount == 2) {
+        boolean resetFlag = count == chessArray.length && resetCount == 2;
+        boolean orderFlag = order();
+        if (resetFlag && orderFlag) {
             return true;
         } else {
             return false;
