@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Menu, Breadcrumb, Icon, Row, Col, Button, message, Table } from 'antd';
+import { Icon, Row, Col, Button, message } from 'antd';
 import auth from '../common/auth';
 
 export default class Home extends Component {

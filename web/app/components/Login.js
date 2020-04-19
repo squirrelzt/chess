@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import {  Form, Icon, Row, Col, Button, message, Input, Checkbox } from 'antd';
+import React, { Component } from 'react';
+import {  Form, Icon, Button, message, Input } from 'antd';
 import auth from '../common/auth';
 import '../css/login.css'
 
@@ -35,7 +35,6 @@ export default class Login extends Component {
         })
     }
     fetch(params = {}) {
-        this.setState({ loading: true });
         auth.fetch('/login','get',params,(result)=>{
             if (result.result == 0) {
                 result.data.id ? localStorage.setItem('id', result.data.id):'';
