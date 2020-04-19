@@ -94,6 +94,9 @@ export default class Home extends Component {
             })
             this.reverseChess(item);
         } else if (item.state == 'DISPLAY') {
+            if (item.color !== localStorage.getItem('color')) {
+                return;
+            }
             if (!this.state.selectedItem) {
                 // 选中要操作的棋子
                 this.setState({
@@ -211,11 +214,11 @@ export default class Home extends Component {
             color: itemColor
         }
         auth.fetch('/firstReverseChess','get',params,(result)=>{
-            if (result && result.result ==0) {
-                auth.fetch('/queryPersonById','get',params,(result)=>{
-                    if (result) {
-                        localStorage.setItem('color', result.color);
-                        localStorage.setItem('state', result.state);
+            if (result && result.result == 0) {
+                auth.fetch('/queryPersonById','get',{id: personId},(res)=>{
+                    if (res) {
+                        localStorage.setItem('color', res.color);
+                        localStorage.setItem('state', res.state);
                     }
                 });
             }
