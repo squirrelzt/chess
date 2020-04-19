@@ -88,8 +88,6 @@ export default class Home extends Component {
             })
             this.reverseChess(item);
         } else if (item.state == 'DISPLAY') {
-            console.log('------------------')
-            console.log(item)
             if (!this.state.selectedItem) {
                 // 选中要操作的棋子
                 this.setState({
@@ -203,11 +201,31 @@ export default class Home extends Component {
             }
         });
     }
+    handleCancel() {
+        message.success('和局')
+      }
+      handleRest() {
+        auth.fetch('/initData','get','',(result)=>{
+            if (result && result.result == 0) {
+              message.success('重开成功');
+              this.setState({
+                  role: 'CONSUMER',
+                  semaphore: 1
+              })
+            } else {
+              message.error('重开失败');
+            }
+        });
+      }
     render() {
         const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
         return (
             <div className="btn-margin">
                 <div className="monitor-frame">
+                    <div className="layout-operation">
+                        <Button type="primary" size="large" onClick={this.handleRest.bind(this)}>重开</Button>
+                        <Button type="primary" onClick={this.handleCancel.bind(this)}>结束</Button>
+                    </div>
                     <div className="chess-container">
                         {items.map((rowItem,rowIndex)=>{
                             return (
