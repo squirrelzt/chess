@@ -82,7 +82,6 @@ public class ChessServiceImpl implements ChessService {
             String location = locationArray[i];
             String x = location.substring(0, 1);
             String y = location.substring(1, 2);
-            System.out.println(x + "\t" + y + "\t" + location);
             count += chessMapper.shufflecard(""+id, x, y, location);
         }
         if (count == 32) {
