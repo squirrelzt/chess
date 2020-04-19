@@ -5,6 +5,7 @@ import com.chess.domain.ChessDomain;
 import com.chess.mapper.ChessMapper;
 import com.chess.mapper.PersonMapper;
 import com.chess.service.ChessService;
+import com.chess.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class ChessServiceImpl implements ChessService {
     ChessMapper chessMapper;
     @Autowired
     PersonMapper personMapper;
+    @Autowired
+    PersonService personService;
 
     @Override
     @Transactional
@@ -114,5 +117,37 @@ public class ChessServiceImpl implements ChessService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean operate(String chessId, String opponentChessId, String personId, String opponentId, String personState) {
+        personService.updateState(personId, opponentId, personState);
+        List<ChessDomain> chessList = chessMapper.queryById(chessId);
+        List<ChessDomain> opponentList = chessMapper.queryById(opponentChessId);
+        ChessDomain chess = null;
+        ChessDomain opponentChess = null;
+        if (!chessList.isEmpty()) {
+            chess = chessList.get(0);
+        }
+        if (!chessList.isEmpty()) {
+            opponentChess = opponentList.get(0);
+        }
+        return allOver(chess, opponentChess);
+    }
+
+    private boolean allOver(ChessDomain chess, ChessDomain opponentChess) {
+        String id = chess.getId();
+        String opponentId = opponentChess.getId();
+        String chessCode = chess.getCode();
+        String opponentChessCode = opponentChess.getCode();
+        boolean allOverFlag = false;
+        if (chessCode.equals(opponentChessCode)) {
+            int chessCount = chessMapper.deleteChess(id);
+            int chessOpponentCount = chessMapper.deleteChess(opponentId);
+            if (chessCount == 1 && chessOpponentCount == 1) {
+                allOverFlag = true;
+            }
+        }
+        return allOverFlag;
     }
 }

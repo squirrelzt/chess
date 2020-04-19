@@ -5,6 +5,7 @@ import com.chess.service.ChessService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -40,5 +41,19 @@ public class ChessController {
     @GetMapping("query")
     public List<ChessDomain> listDatas() {
         return chessService.query();
+    }
+
+    @GetMapping("operate")
+    public Map operate(@RequestParam("chessId") String chessId, @RequestParam("opponentChessId") String opponentChessId,
+                       @RequestParam("personId") String personId, @RequestParam("opponentId") String opponentId,
+                       @RequestParam("personState") String personState) {
+        Map map = new HashMap(2);
+        boolean flag = chessService.operate(chessId, opponentChessId, personId, opponentId, personState);
+        if (flag) {
+            map.put("result", 0);
+        } else {
+            map.put("result", 1);
+        }
+        return map;
     }
 }

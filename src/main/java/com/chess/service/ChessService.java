@@ -13,4 +13,6 @@ public interface ChessService {
     List<ChessDomain> query();
 
     boolean reverseChess(String id);
+
+    boolean operate(String chessId, String opponentChessId, String personId, String opponentId, String personState);
 }
