@@ -51,13 +51,13 @@ export default class Home extends Component {
             const role = localStorage.getItem('role', result.role);
             if (state) {
                 let semaphore = 0;
-                if (state == 'active' && role == 'CONSUMER') {
+                if (state == 'ACTIVE' && role == 'CONSUMER') {
                     semaphore = 1;
-                } else if (state == 'active' && role == 'PRODUCER') {
+                } else if (state == 'ACTIVE' && role == 'PRODUCER') {
                     semaphore = 0;
-                } else if (state == 'lock' && role == 'CONSUMER') {
+                } else if (state == 'LOCK' && role == 'CONSUMER') {
                     semaphore = 0;
-                } else if (state == 'lock' && role == 'PRODUCER') {
+                } else if (state == 'LOCK' && role == 'PRODUCER') {
                     semaphore = 1;
                 }
                 this.setState({
