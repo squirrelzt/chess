@@ -37,6 +37,9 @@ export default class Home extends Component {
         const id = localStorage.getItem('id');
         if (id) {
             this.fetch();
+            setInterval(()=>{
+                this.fetch();
+            },2000)
             this.fetchChesserById({id:id});
         } else {
             window.location.href="/login";
