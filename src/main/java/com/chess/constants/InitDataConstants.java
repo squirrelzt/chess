@@ -36,6 +36,16 @@ public class InitDataConstants {
             {"32","卒","BLACK","4","8","NONE","48"},
     };
 
+    public static final String xArray[] = {"1","1","1","1","1","1","1","1",
+                                           "2","2","2","2","2","2","2","2",
+                                           "3","3","3","3","3","3","3","3",
+                                           "4","4","4","4","4","4","4","4"};
+
+    public static final String yArray[] = {"1","2","3","4","5","6","7","8",
+            "1","2","3","4","5","6","7","8",
+            "1","2","3","4","5","6","7","8",
+            "1","2","3","4","5","6","7","8"};
+
     public static void main(String[] args) {
         InitDataConstants dataConstants = new InitDataConstants();
     }

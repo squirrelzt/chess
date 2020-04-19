@@ -21,4 +21,8 @@
     update chess set name = #{name}, color = #{color}, x = #{x}, y = #{y}, state = #{state},
     location = #{location} where id = #{id}
   </update>
+
+  <update id="shufflecard">
+    update chess set x = #{x}, y = #{y}, location = #{location} where id = #{id}
+  </update>
 </mapper>

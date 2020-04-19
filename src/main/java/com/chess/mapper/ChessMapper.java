@@ -18,4 +18,7 @@ public interface ChessMapper {
     int initChessData(@Param("id") String id, @Param("name") String name, @Param("color") String color,
                       @Param("x") String x, @Param("y") String y, @Param("state") String state,
                       @Param("location") String location);
+
+    int shufflecard(@Param("id") String id, @Param("x") String x, @Param("y") String y,
+                    @Param("location") String location);
 }

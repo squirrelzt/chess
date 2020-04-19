@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -46,6 +47,51 @@ public class ChessServiceImpl implements ChessService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public boolean order() {
+        String[] xArray = InitDataConstants.xArray;
+        String[] yArray = InitDataConstants.yArray;
+        shufflecard(xArray);
+        shufflecard(yArray);
+
+//        for (int i = 0; i < xArray.length; i++) {
+//            if ((i+1)%8 ==0) {
+//                System.out.println();
+//            }
+//            System.out.print(xArray[i]+"\t");
+//        }
+//        System.out.println("======================");
+//        for (int i = 0; i < yArray.length; i++) {
+//            if ((i+1)%8 ==0) {
+//                System.out.println();
+//            }
+//            System.out.print(yArray[i]+"\t");
+//        }
+        int count = 0;
+        for (int i = 0; i < 32; i++) {
+            int id = i+1;
+            String x = xArray[i];
+            String y = yArray[i];
+            String location = x + "" + y;
+//            System.out.println(x + "\t" + y + "\t" + location);
+            count += chessMapper.shufflecard(""+id, x, y, location);
+        }
+        if (count == 32) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void shufflecard(String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            int num = new Random().nextInt(32);
+            String temp = array[i];
+            array[i] = array[num];
+            array[num] = temp;
         }
     }
 

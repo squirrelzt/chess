@@ -8,6 +8,8 @@ public interface ChessService {
 
     boolean initData();
 
+    boolean order();
+
     List<ChessDomain> query();
 
     boolean reverseChess(String id);

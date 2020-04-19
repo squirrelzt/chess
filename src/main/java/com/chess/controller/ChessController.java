@@ -30,6 +30,13 @@ public class ChessController {
         return map;
     }
 
+    @GetMapping("order")
+    public Map order() {
+        Map map = new HashMap(2);
+        chessService.order();
+        return map;
+    }
+
     @GetMapping("query")
     public List<ChessDomain> listDatas() {
         return chessService.query();
