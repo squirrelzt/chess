@@ -93,10 +93,13 @@ export default class Home extends Component {
             })
             this.reverseChess(item);
         } else if (item.state == 'DISPLAY') {
-            if (item.color !== localStorage.getItem('color')) {
+            if (item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
                 return;
             }
             if (!this.state.selectedItem) {
+                if (item.code == '') {
+                    return;
+                }
                 // 选中要操作的棋子
                 this.setState({
                     selectedItem: item
@@ -133,11 +136,34 @@ export default class Home extends Component {
         }
         
         this.lockFrame(state, localStorage.getItem('role'));
+        this.fetchAllOver(this.state.selectedItem, selectedOpponentItem);
         // 兑子
-        if (this.state.selectedItem.code == selectedOpponentItem.code) {
-            
-        }
+        // if (this.state.selectedItem.code == selectedOpponentItem.code) {
+        //     this.fetchAllOver(selectedItem, selectedOpponentItem);
+        // }
 
+    }
+
+    fetchAllOver(selectedItem, selectedOpponentItem) {
+        const chessId = selectedItem.id;
+        const opponentChessId = selectedOpponentItem.id;
+        const personId = localStorage.getItem('id');
+        const opponentId = localStorage.getItem('opponentId');
+        const personState = localStorage.getItem('state');
+        let params = {
+            chessId,
+            opponentChessId,
+            personId,
+            opponentId,
+            personState
+        }
+        auth.fetch('/operate','get',params,(result)=>{
+            if (result && result.result == 0) {
+                this.setState({
+                    selectedItem: ''
+                })
+            }
+        });
     }
     
     // 翻子

@@ -1,3 +1,3 @@
 import 'antd/dist/antd.less';
 
-import '../css/home.css';
+import '../css/home.less';

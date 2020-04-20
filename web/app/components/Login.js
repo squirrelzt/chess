@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {  Form, Icon, Button, message, Input } from 'antd';
 import auth from '../common/auth';
-import '../css/login.css'
+import './../css/login.less'
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -89,3 +89,5 @@ export default class Login extends Component {
         )
     }
 }
+
+export default Login
