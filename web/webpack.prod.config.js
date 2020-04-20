@@ -1,10 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-var ManifestPlugin = require('webpack-manifest-plugin');
-const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -32,18 +28,13 @@ module.exports = {
 			}
 		  }
 		}
-	},
+	  },
     entry: {
         index: './src/entry/index.js'
 	},
-	mode: 'development',
-	devtool: 'inline-source-map',
-    devServer: {
-		historyApiFallback:true,
-        contentBase: './dist'
-	},
+	mode: 'production',
+	devtool: false,
     plugins: [
-        // new CleanWebpackPlugin(),
     	new HtmlWebpackPlugin({
 				favicon:'./src/entry/images/favicon.ico',
 				title: '棋牌游戏',
@@ -53,29 +44,23 @@ module.exports = {
 					preserveLineBreaks: false,
 					minifyCSS: true,
 					minifyJS: true,
-					removeComments: false
+					removeComments: true
 				}
 			}),
-        new ManifestPlugin(),
-        new webpack.NamedModulesPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
 		new ExtractTextPlugin("[name].css"),
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp:/\.css$/g,
   			cssProcessor:require('cssnano')
 		}),
-		// new BundleAnalyzerPlugin({
-		// 	analyzerPort: 8919
-		// })
+		new BundleAnalyzerPlugin({
+			analyzerPort: 8919
+		})
 	],
     output: {
 			filename: '[name].js',
 			path: path.resolve(__dirname, 'dist'),
 			publicPath: '/'
 		},
-		// optimization: {
-		// 	minimizer: [new UglifyJsPlugin()],
-		//   },
   module: {
 	  rules: [
 	    {
@@ -87,13 +72,29 @@ module.exports = {
 		  },{
 			test: /\.(png|svg|jpg|gif|ico)$/,
 			use: [
-				'file-loader'
+				{
+					loader: 'file-loader',
+					options: {
+						 name: 'images/[hash:8].[name].[ext]',
+						 context: 'dist',
+						 limit: 8192,	
+						 publicPath: './'
+					 }
+				 }
 			]
 		}, {
 			test: /\.(woff|woff2|eot|ttf|otf)$/,
 			use: [
-				'file-loader'
-				]
+				{
+					loader: 'file-loader',
+					options: {
+						 name: 'images/[hash:8].[name].[ext]',
+						 context: 'dist',
+						 limit: 8192,	
+						 publicPath: './'
+					 }
+				 }
+			]
 		}, {
 			test: /\.(csv|tsv)$/,
 			use: [
@@ -117,7 +118,7 @@ module.exports = {
 				'css-loader',
 				'less-loader'
 			]
-		 }
+		  }
 		]
   }
 };
