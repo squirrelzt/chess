@@ -20,7 +20,7 @@ public class PersonController {
     @Autowired
     ChessService chessService;
 
-    @GetMapping("login")
+    @GetMapping("logins")
     public Map login(@RequestParam String username, @RequestParam String password) {
         PersonDomain personDomain = personService.login(username, password);
         Map<String, Object> map = new HashMap<>(2);
