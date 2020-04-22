@@ -44,7 +44,7 @@ export default class Home extends Component {
             setInterval(()=>{
                 this.fetch();
                 this.fetchChesserById({id:id});
-            },4000)
+            },3000)
         } else {
             window.location.href="/login";
         }
@@ -87,30 +87,55 @@ export default class Home extends Component {
         if (!item) {
             return;
         }
-        // 判断此棋子是否已翻开
-        if (item.state == 'NONE') {
-            this.setState({
-                selectedItem: '',
-                selectedOpponentItem: ''
-            })
-            this.reverseChess(item);
-        } else if (item.state == 'DISPLAY') {
-            if (item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
+        // 选己方操作棋子
+        if (this.state.selectedItem) {
+            const color = localStorage.getItem('color');
+            if (color !== item.color) {
+                message.error('不能操作对方棋子')
                 return;
             }
-            if (!this.state.selectedItem) {
-                if (item.code == '') {
+        }
+        // 再次点击选中的棋子，取消选中
+        if (this.state.selectedItem.id === item.id) {
+            this.setState({
+                selectedItem: ''
+            });
+            return;
+        }
+        //已选中本方棋子，选中对方棋子进行操作
+        if (this.state.selectedItem) {
+            if (this.state.selectedItem.color === item.color) {
+                message.error("相同颜色不能操作");
+                return;
+            }
+            this.operateChess(item);
+        } else {
+             // 判断此棋子是否已翻开
+            if (item.state == 'NONE') {
+                this.setState({
+                    selectedItem: '',
+                    selectedOpponentItem: ''
+                })
+                this.reverseChess(item);
+            } else if (item.state == 'DISPLAY') {
+                if (item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
                     return;
                 }
-                // 选中要操作的棋子
-                this.setState({
-                    selectedItem: item
-                })
-            } else {
-                this.operateChess(item);
+                if (!this.state.selectedItem) {
+                    if (item.code == '') {
+                        return;
+                    }
+                    // 选中要操作的棋子
+                    this.setState({
+                        selectedItem: item
+                    })
+                } else {
+                    this.operateChess(item);
+                }
+                
             }
-            
         }
+       
     }
 
     // 兑子，吃子，移动操作
@@ -136,18 +161,39 @@ export default class Home extends Component {
         } else if (state == 'LOCK') {
             state = 'ACTIVE';
         }
-        
+        localStorage.setItem('state', state);
         this.lockFrame(state, localStorage.getItem('role'));
-        this.fetchAllOver(this.state.selectedItem, selectedOpponentItem);
-        // 兑子
-        // if (this.state.selectedItem.code == selectedOpponentItem.code) {
-        //     this.fetchAllOver(selectedItem, selectedOpponentItem);
-        // }
+        this.operation(this.state.selectedItem, selectedOpponentItem);
+     
 
     }
 
-    fetchAllOver(selectedItem, selectedOpponentItem) {
+    operation(selectedItem, selectedOpponentItem) {
         const chessId = selectedItem.id;
+        const code = selectedItem.code;
+
+        const chessX = selectedItem.x;
+        const chessY = selectedItem.y;
+        const opponentChessX = selectedOpponentItem.x;
+        const opponentChessY = selectedOpponentItem.y;
+        if (chessX !== opponentChessX && chessY !== opponentChessY) {
+            message.error("不同行数据不能操作");
+            return;
+        }
+
+        if ("pao" === code) {
+            
+        }
+        if (!selectedItem.code && "bing" === code) {
+            if ("jiang" !== selectedOpponentItem.code) {
+                message.error("兵卒只能吃将帅");
+                return;
+            }
+            if (chessX !== opponentChessX && chessY !== opponentChessY) {
+                message.error("兵卒只能吃临近的将帅");
+                return;
+            }
+        }
         const opponentChessId = selectedOpponentItem.id;
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
@@ -164,6 +210,8 @@ export default class Home extends Component {
                 this.setState({
                     selectedItem: ''
                 })
+            } else if (result && result.result == 1) {
+                message.error(result.msg);
             }
         });
     }

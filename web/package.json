@@ -1,10 +1,10 @@
 {
-  "name": "big-show-admin-web",
+  "name": "qipanyouxi",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "keywords": [],
-  "author": "shiqianghui",
+  "author": "squirrelzt",
   "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
