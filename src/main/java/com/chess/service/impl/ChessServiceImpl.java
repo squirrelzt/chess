@@ -141,6 +141,7 @@ public class ChessServiceImpl implements ChessService {
             } else {
                 map.put("result", "1");
             }
+            return map;
         }
         if (chessCode.equals(opponentChessCode)) {
             if (flip(chessId, opponentChessId)) {
@@ -150,9 +151,14 @@ public class ChessServiceImpl implements ChessService {
                 map.put("result", "1");
                 map.put("msg", "翻子失败");
             }
+            return map;
         }
         if ("pao".equals(chessCode)) {
             return eat(chess, opponentChess);
+        }
+
+        if ("bing".equals(chessCode) && "jiang".equals(opponentChessCode)) {
+            return soldier(chess, opponentChess);
         }
         return map;
     }
@@ -236,5 +242,25 @@ public class ChessServiceImpl implements ChessService {
         return map;
     }
 
+    /**
+     * 兵卒吃将帅
+     * @param chess
+     * @param opponentChess
+     * @return
+     */
+    public Map soldier(ChessDomain chess, ChessDomain opponentChess) {
+        Map map = new HashMap();
+        int delCount1 = chessMapper.deleteChess(chess.getId());
+        int delCount2 = chessMapper.deleteChess(opponentChess.getId());
+        int moveCount = chessMapper.move(opponentChess.getId(), chess.getName(), chess.getCode(), chess.getColor());
+        if (1 != delCount1 && 1 != delCount2 && 1 != moveCount) {
+            map.put("result", "0");
+            map.put("msg", "兵卒吃将帅成功");
+        } else {
+            map.put("result", "1");
+            map.put("msg", "兵卒吃将帅失败");
+        }
+        return map;
+    }
 
 }
