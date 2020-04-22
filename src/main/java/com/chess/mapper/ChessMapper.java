@@ -26,4 +26,6 @@ public interface ChessMapper {
                     @Param("location") String location);
 
     int deleteChess(@RequestParam("id") String id);
+
+    int move(@RequestParam("id") String id, @RequestParam("name") String name, @RequestParam("code") String code, @RequestParam("color") String color);
 }

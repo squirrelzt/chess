@@ -132,22 +132,45 @@ public class ChessServiceImpl implements ChessService {
         if (!chessList.isEmpty()) {
             opponentChess = opponentList.get(0);
         }
-        return allOver(chess, opponentChess);
-    }
-
-    private boolean allOver(ChessDomain chess, ChessDomain opponentChess) {
-        String id = chess.getId();
-        String opponentId = opponentChess.getId();
         String chessCode = chess.getCode();
         String opponentChessCode = opponentChess.getCode();
-        boolean allOverFlag = false;
-        if (chessCode.equals(opponentChessCode)) {
-            int chessCount = chessMapper.deleteChess(id);
-            int chessOpponentCount = chessMapper.deleteChess(opponentId);
-            if (chessCount == 1 && chessOpponentCount == 1) {
-                allOverFlag = true;
-            }
+        if ("".equals(opponentChessCode)) {
+            return move(chess, opponentChess);
         }
-        return allOverFlag;
+        if (chessCode.equals(opponentChessCode)) {
+            return flip(chessId, opponentChessId);
+        }
+        return false;
+    }
+
+    /**
+     * 兑子
+     * @param chessId
+     * @param opponentChessId
+     * @return
+     */
+    private boolean flip(String chessId, String opponentChessId) {
+        boolean flipFlag = false;
+        int chessCount = chessMapper.deleteChess(chessId);
+        int chessOpponentCount = chessMapper.deleteChess(opponentChessId);
+        if (chessCount == 1 && chessOpponentCount == 1) {
+            flipFlag = true;
+        }
+        return flipFlag;
+    }
+
+    private boolean move(ChessDomain chess, ChessDomain opponentChess) {
+        String id = chess.getId();
+        int chessCount = chessMapper.deleteChess(id);
+        String opponentId = opponentChess.getId();
+        String name = chess.getName();
+        String code = chess.getCode();
+        String color = chess.getColor();
+        int opponentCount = chessMapper.move(opponentId, name, code, color);
+        boolean moveFlag = false;
+        if (chessCount == 1 && opponentCount == 1) {
+            moveFlag = true;
+        }
+        return moveFlag;
     }
 }

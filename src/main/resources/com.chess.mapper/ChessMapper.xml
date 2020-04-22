@@ -32,6 +32,10 @@
   </update>
 
   <update id="deleteChess">
-    update chess set name = '', code = '' where id = #{id}
+    update chess set name = '', code = '', color = '' where id = #{id}
+  </update>
+
+  <update id="move">
+    update chess set name = #{name}, code = #{code}, color = #{color} where id = #{id}
   </update>
 </mapper>
