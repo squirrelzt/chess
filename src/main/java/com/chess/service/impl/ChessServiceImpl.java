@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -120,7 +119,8 @@ public class ChessServiceImpl implements ChessService {
     }
 
     @Override
-    public boolean operate(String chessId, String opponentChessId, String personId, String opponentId, String personState) {
+    public Map operate(String chessId, String opponentChessId, String personId, String opponentId, String personState) {
+        Map map = new HashMap();
         personService.updateState(personId, opponentId, personState);
         List<ChessDomain> chessList = chessMapper.queryById(chessId);
         List<ChessDomain> opponentList = chessMapper.queryById(opponentChessId);
@@ -135,12 +135,26 @@ public class ChessServiceImpl implements ChessService {
         String chessCode = chess.getCode();
         String opponentChessCode = opponentChess.getCode();
         if ("".equals(opponentChessCode)) {
-            return move(chess, opponentChess);
+            if (move(chess, opponentChess)) {
+                map.put("result", "0");
+                map.put("msg", "棋子移动成功");
+            } else {
+                map.put("result", "1");
+            }
         }
         if (chessCode.equals(opponentChessCode)) {
-            return flip(chessId, opponentChessId);
+            if (flip(chessId, opponentChessId)) {
+                map.put("result", "0");
+                map.put("msg", "翻子成功");
+            } else {
+                map.put("result", "1");
+                map.put("msg", "翻子失败");
+            }
         }
-        return false;
+        if ("pao".equals(chessCode)) {
+            return eat(chess, opponentChess);
+        }
+        return map;
     }
 
     /**
@@ -159,6 +173,12 @@ public class ChessServiceImpl implements ChessService {
         return flipFlag;
     }
 
+    /**
+     * 移动
+     * @param chess
+     * @param opponentChess
+     * @return
+     */
     private boolean move(ChessDomain chess, ChessDomain opponentChess) {
         String id = chess.getId();
         int chessCount = chessMapper.deleteChess(id);
@@ -173,4 +193,48 @@ public class ChessServiceImpl implements ChessService {
         }
         return moveFlag;
     }
+
+    private Map eat(ChessDomain chess, ChessDomain opponentChess) {
+        Map map = new HashMap();
+        String chessX = chess.getX();
+        String color = chess.getColor();
+        String chessY = chess.getY();
+        String opponentX = opponentChess.getX();
+        String opponentY = opponentChess.getY();
+        List<ChessDomain> listX = null;
+        List<ChessDomain> listY = null;
+        if ((chessY.equals(opponentY)) && Integer.parseInt(chessX) < Integer.parseInt(opponentX)) {
+            listX = chessMapper.listPaoX(chessX, opponentX, chessY);
+        } else if ((chessY.equals(opponentY)) && Integer.parseInt(chessX) > Integer.parseInt(opponentX)) {
+            listX = chessMapper.listPaoX(opponentX, chessX, chessY);
+        }
+        // 炮与指定棋子间隔着一个棋子
+        if (!Objects.isNull(listX) && !listX.isEmpty() && listX.size() == 1) {
+            chessMapper.deleteChess(chess.getId());
+            chessMapper.deleteChess(opponentChess.getId());
+            chessMapper.move(opponentChess.getId(), chess.getName(), chess.getCode(), color);
+            map.put("result", "0");
+            map.put("msg", "炮吃子成功");
+            return map;
+        }
+        if ((chessX.equals(opponentX) && Integer.parseInt(chessY) < Integer.parseInt(opponentY))) {
+            listY = chessMapper.listPaoY(chessY, opponentY, chessX);
+        } else if ((chessX.equals(opponentX) && Integer.parseInt(chessY) > Integer.parseInt(opponentY))) {
+            listY = chessMapper.listPaoY(opponentY, chessY, chessX);
+        }
+        // 炮与指定棋子间隔着一个棋子
+        if (!Objects.isNull(listY) && !listY.isEmpty() && listY.size() == 1) {
+            chessMapper.deleteChess(chess.getId());
+            chessMapper.deleteChess(opponentChess.getId());
+            chessMapper.move(opponentChess.getId(), chess.getName(), chess.getCode(), color);
+            map.put("result", "0");
+            map.put("msg", "炮吃子成功");
+            return map;
+        }
+        map.put("result", "1");
+        map.put("msg", "炮吃子失败");
+        return map;
+    }
+
+
 }

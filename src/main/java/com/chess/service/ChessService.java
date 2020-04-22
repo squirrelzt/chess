@@ -3,6 +3,7 @@ package com.chess.service;
 import com.chess.domain.ChessDomain;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ChessService {
 
@@ -14,5 +15,5 @@ public interface ChessService {
 
     boolean reverseChess(String id);
 
-    boolean operate(String chessId, String opponentChessId, String personId, String opponentId, String personState);
+    Map operate(String chessId, String opponentChessId, String personId, String opponentId, String personState);
 }

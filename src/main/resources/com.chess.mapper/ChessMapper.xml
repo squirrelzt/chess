@@ -38,4 +38,16 @@
   <update id="move">
     update chess set name = #{name}, code = #{code}, color = #{color} where id = #{id}
   </update>
+
+  <select id="listPaoX" resultMap="BaseResultMap">
+    select id, name, code, color, x, y, state, location from chess
+    where x &gt; #{fromX} and x &lt; #{toX} and y = #{y}
+    and name != '' and code != '' and color != ''
+  </select>
+
+  <select id="listPaoY" resultMap="BaseResultMap">
+    select id, name, code, color, x, y, state, location from chess
+    where y &gt; #{fromY} and y &lt; #{toY} and x = #{x}
+    and name != '' and code != '' and color != ''
+  </select>
 </mapper>

@@ -28,4 +28,8 @@ public interface ChessMapper {
     int deleteChess(@RequestParam("id") String id);
 
     int move(@RequestParam("id") String id, @RequestParam("name") String name, @RequestParam("code") String code, @RequestParam("color") String color);
+
+    List<ChessDomain> listPaoX(@RequestParam("fromX") String fromX, @RequestParam("toX") String toX, @RequestParam("y") String y);
+
+    List<ChessDomain> listPaoY(@RequestParam("fromY") String fromY, @RequestParam("toY") String toY, @RequestParam("x") String x);
 }
