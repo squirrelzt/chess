@@ -2,6 +2,7 @@ package com.chess.service.impl;
 
 import com.chess.constants.InitDataConstants;
 import com.chess.domain.ChessDomain;
+import com.chess.enums.PowerEnum;
 import com.chess.mapper.ChessMapper;
 import com.chess.mapper.PersonMapper;
 import com.chess.service.ChessService;
@@ -121,7 +122,7 @@ public class ChessServiceImpl implements ChessService {
     @Override
     public Map operate(String chessId, String opponentChessId, String personId, String opponentId, String personState) {
         Map map = new HashMap();
-        personService.updateState(personId, opponentId, personState);
+//        personService.updateState(personId, opponentId, personState);
         List<ChessDomain> chessList = chessMapper.queryById(chessId);
         List<ChessDomain> opponentList = chessMapper.queryById(opponentChessId);
         ChessDomain chess = null;
@@ -136,6 +137,7 @@ public class ChessServiceImpl implements ChessService {
         String opponentChessCode = opponentChess.getCode();
         if ("".equals(opponentChessCode)) {
             if (move(chess, opponentChess)) {
+                personService.updateState(personId, opponentId, personState);
                 map.put("result", "0");
                 map.put("msg", "棋子移动成功");
             } else {
@@ -145,6 +147,7 @@ public class ChessServiceImpl implements ChessService {
         }
         if (chessCode.equals(opponentChessCode)) {
             if (flip(chessId, opponentChessId)) {
+                personService.updateState(personId, opponentId, personState);
                 map.put("result", "0");
                 map.put("msg", "翻子成功");
             } else {
@@ -154,13 +157,40 @@ public class ChessServiceImpl implements ChessService {
             return map;
         }
         if ("pao".equals(chessCode)) {
-            return eat(chess, opponentChess);
+            map = eat(chess, opponentChess);
+            if ("0".equals(map.get("result"))) {
+                personService.updateState(personId, opponentId, personState);
+            }
+            return map;
         }
 
-        if ("bing".equals(chessCode) && "jiang".equals(opponentChessCode)) {
-            return soldier(chess, opponentChess);
+        boolean isAdjacent = checkIsAdjacent(chess, opponentChess);
+        if (isAdjacent) {
+            if ("bing".equals(chessCode) && "jiang".equals(opponentChessCode)) {
+                map = soldier(chess, opponentChess);
+                if ("0".equals(map.get("result"))) {
+                    personService.updateState(personId, opponentId, personState);
+                }
+                return map;
+            }
+
+            if (!"jiang".equals(chessCode) && "bing".equals(opponentChessCode)) {
+                map = soldier(chess, opponentChess);
+                if ("0".equals(map.get("result"))) {
+                    personService.updateState(personId, opponentId, personState);
+                }
+                return map;
+            }
+            map = power(chess, opponentChess);
+            if ("0".equals(map.get("result"))) {
+                personService.updateState(personId, opponentId, personState);
+            }
+            return map;
+        } else {
+            map.put("result", "1");
+            map.put("msg", "非相邻不能操作");
+            return map;
         }
-        return map;
     }
 
     /**
@@ -263,4 +293,85 @@ public class ChessServiceImpl implements ChessService {
         return map;
     }
 
+    /**
+     * 对方棋子是兵卒
+     * @param chess
+     * @param opponentChess
+     * @return
+     */
+    public Map opponentChessIsSoldier(ChessDomain chess, ChessDomain opponentChess) {
+        Map map = new HashMap();
+        int delCount1 = chessMapper.deleteChess(chess.getId());
+        int delCount2 = chessMapper.deleteChess(opponentChess.getId());
+        int moveCount = chessMapper.move(opponentChess.getId(), chess.getName(), chess.getCode(), chess.getColor());
+        if (1 != delCount1 && 1 != delCount2 && 1 != moveCount) {
+            map.put("result", "0");
+            map.put("msg", "吃兵卒成功");
+        } else {
+            map.put("result", "1");
+            map.put("msg", "吃兵卒失败");
+        }
+        return map;
+    }
+
+    public Map power(ChessDomain chess, ChessDomain opponentChess) {
+        Map map = new HashMap();
+        String code = chess.getCode();
+        String opponentCode = opponentChess.getCode();
+        int chessPower = 0;
+        int opponentPower = 0;
+        for (PowerEnum powerEnum : PowerEnum.values()) {
+            if (code.equals(powerEnum.getCode())) {
+                chessPower = powerEnum.getNumber();
+            }
+            if (opponentCode.equals(powerEnum.getCode())) {
+                opponentPower = powerEnum.getNumber();
+            }
+        }
+        if (chessPower > opponentPower) {
+            int delCount1 = chessMapper.deleteChess(chess.getId());
+            int delCount2 = chessMapper.deleteChess(opponentChess.getId());
+            int moveCount = chessMapper.move(opponentChess.getId(), chess.getName(), chess.getCode(), chess.getColor());
+            if (1 != delCount1 && 1 != delCount2 && 1 != moveCount) {
+                map.put("result", "0");
+                map.put("msg", "大子吃小子成功");
+            } else {
+                map.put("result", "1");
+                map.put("msg", "大子吃小子失败");
+            }
+        } else {
+            map.put("result", "1");
+            map.put("msg", "小子不能吃大子");
+        }
+        return map;
+    }
+
+    private boolean checkIsAdjacent(ChessDomain chess, ChessDomain opponentChess) {
+        Map map = new HashMap();
+        String chessX = chess.getX();
+        String chessY = chess.getY();
+        String opponentX = opponentChess.getX();
+        String opponentY = opponentChess.getY();
+        int chessIntX = Integer.parseInt(chessX);
+        int chessIntY = Integer.parseInt(chessY);
+        int opponentIntX = Integer.parseInt(opponentX);
+        int opponentIntY = Integer.parseInt(opponentY);
+        if (!chessX.equals(opponentX) && !chessY.equals(opponentY)) {
+            return false;
+        } else {
+            if (chessX.equals(opponentX)) {
+                if ((chessIntY-opponentIntY == 1) || (chessIntY-opponentIntY == -1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if ((chessIntX-opponentIntX == 1) || (chessIntX-opponentIntX == -1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
 }
