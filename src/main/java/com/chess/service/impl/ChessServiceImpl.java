@@ -283,7 +283,7 @@ public class ChessServiceImpl implements ChessService {
         int delCount1 = chessMapper.deleteChess(chess.getId());
         int delCount2 = chessMapper.deleteChess(opponentChess.getId());
         int moveCount = chessMapper.move(opponentChess.getId(), chess.getName(), chess.getCode(), chess.getColor());
-        if (1 != delCount1 && 1 != delCount2 && 1 != moveCount) {
+        if (1 == delCount1 && 1 == delCount2 && 1 == moveCount) {
             map.put("result", "0");
             map.put("msg", "兵卒吃将帅成功");
         } else {
