@@ -9,6 +9,8 @@ public interface ChessService {
 
     boolean initData();
 
+    boolean insertChess();
+
     boolean order();
 
     List<ChessDomain> query();

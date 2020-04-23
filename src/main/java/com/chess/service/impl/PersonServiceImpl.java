@@ -1,7 +1,8 @@
 package com.chess.service.impl;
 
-import com.chess.domain.PersonDomain;
+import com.chess.domain.Person;
 import com.chess.mapper.PersonMapper;
+import com.chess.service.ChessService;
 import com.chess.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +17,37 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     PersonMapper personMapper;
+    @Autowired
+    ChessService chessService;
 
     @Override
-    public PersonDomain login(String username, String password) {
-        List<PersonDomain> list = personMapper.login(username, password);
+    public Person login(String username, String password) {
+        List<Person> list = personMapper.login(username, password);
         if (list.isEmpty()) {
-            return null;
+//            return null;
+            chessService.insertChess();
+            // 初始化person表数据
+            return initPerson(username, password);
         } else {
             log.info(list.toString());
             return list.get(0);
         }
     }
 
+    private Person initPerson(String username, String password) {
+        List<Person> list = personMapper.queryByUsername(username);
+        if (list.isEmpty()) {
+            personMapper.insertPerson();
+            personMapper.insertOpponent();
+            List<Person> queryList = personMapper.login(username, password);
+            return queryList.get(0);
+        } else {
+            return null;
+        }
+    }
     @Override
-    public PersonDomain queryPersonById(String id) {
-        List<PersonDomain> list = personMapper.queryPersonById(id);
+    public Person queryPersonById(String id) {
+        List<Person> list = personMapper.queryPersonById(id);
         if (list.isEmpty()) {
             return null;
         } else {
@@ -58,11 +75,11 @@ public class PersonServiceImpl implements PersonService {
     @Override
     @Transactional
     public boolean updateState(String personId, String opponentId, String personState) {
-        List<PersonDomain> list = personMapper.queryPersonById(personId);
+        List<Person> list = personMapper.queryPersonById(personId);
         if (list.isEmpty()) {
             return false;
         }
-        PersonDomain personDomain = list.get(0);
+        Person personDomain = list.get(0);
         String state = personDomain.getState();
         if (!state.equals(personState)) {
             int count = personMapper.updateState(personId, personState);

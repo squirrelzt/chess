@@ -1,6 +1,6 @@
 package com.chess.controller;
 
-import com.chess.domain.PersonDomain;
+import com.chess.domain.Person;
 import com.chess.service.ChessService;
 import com.chess.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +22,19 @@ public class PersonController {
 
     @GetMapping("logins")
     public Map login(@RequestParam String username, @RequestParam String password) {
-        PersonDomain personDomain = personService.login(username, password);
+        Person person = personService.login(username, password);
         Map<String, Object> map = new HashMap<>(2);
-        if (Objects.isNull(personDomain)) {
+        if (Objects.isNull(person)) {
             map.put("result", 1);
         } else {
             map.put("result", 0);
         }
-        map.put("data", personDomain);
+        map.put("data", person);
         return map;
     }
 
     @GetMapping("queryPersonById")
-    public PersonDomain queryChesserById(@RequestParam String id) {
+    public Person queryChesserById(@RequestParam String id) {
         return personService.queryPersonById(id);
     }
 

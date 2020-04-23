@@ -56,6 +56,35 @@ public class ChessServiceImpl implements ChessService {
         }
     }
 
+    /**
+     * 首次添加棋子
+     * @return
+     */
+    @Override
+    public boolean insertChess() {
+        String chessArray[][] = InitDataConstants.chessArray;
+        int count = 0;
+        for (int i = 0; i < chessArray.length; i++) {
+            String id = chessArray[i][0];
+            String name = chessArray[i][1];
+            String code = chessArray[i][2];
+            String color = chessArray[i][3];
+            String x = chessArray[i][4];
+            String y = chessArray[i][5];
+            String state = chessArray[i][6];
+            String location = chessArray[i][7];
+
+            count += chessMapper.insertChess(id, name, code, color, x, y, state, location);
+        }
+        int resetCount = personMapper.resetPerson();
+        boolean resetFlag = count == chessArray.length && resetCount == 2;
+        boolean orderFlag = order();
+        if (resetFlag && orderFlag) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     @Override
     public boolean order() {
         String[] xArray = InitDataConstants.xArray;

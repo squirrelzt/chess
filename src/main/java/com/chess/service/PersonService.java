@@ -1,11 +1,11 @@
 package com.chess.service;
 
-import com.chess.domain.PersonDomain;
+import com.chess.domain.Person;
 
 public interface PersonService {
-    PersonDomain login(String username, String password);
+    Person login(String username, String password);
 
-    PersonDomain queryPersonById(String id);
+    Person queryPersonById(String id);
 
     boolean firstReverseChess(String personId, String opponentId, String color);
 
