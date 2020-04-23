@@ -44,7 +44,7 @@ export default class Home extends Component {
             setInterval(()=>{
                 this.fetch();
                 this.fetchChesserById({id:id});
-            },3000)
+            },2000)
         } else {
             window.location.href="/login";
         }
@@ -56,8 +56,10 @@ export default class Home extends Component {
         auth.fetch('/queryPersonById','get',params,(result)=>{
             const role = result.role;
             const state = result.state;
+            const color = result.color;
             localStorage.setItem('role', role);
             localStorage.setItem('state', state);
+            localStorage.setItem('color', color);
             if (state && role) {
                 this.lockFrame(state, role);
             }
@@ -88,37 +90,21 @@ export default class Home extends Component {
             return;
         }
         // 选己方操作棋子
-        if (this.state.selectedItem) {
+        if (!this.state.selectedItem) {
             const color = localStorage.getItem('color');
-            if (color !== item.color) {
+            if (!color && color !== item.color && "DISPLAY" == item.state) {
                 message.error('不能操作对方棋子')
                 return;
             }
-        }
-        // 再次点击选中的棋子，取消选中
-        if (this.state.selectedItem.id === item.id) {
-            this.setState({
-                selectedItem: ''
-            });
-            return;
-        }
-        //已选中本方棋子，选中对方棋子进行操作
-        if (this.state.selectedItem) {
-            if (this.state.selectedItem.color === item.color) {
-                message.error("相同颜色不能操作");
-                return;
-            }
-            this.operateChess(item);
-        } else {
              // 判断此棋子是否已翻开
-            if (item.state == 'NONE') {
+             if (item.state == 'NONE') {
                 this.setState({
                     selectedItem: '',
                     selectedOpponentItem: ''
                 })
                 this.reverseChess(item);
             } else if (item.state == 'DISPLAY') {
-                if (item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
+                if (!color && item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
                     return;
                 }
                 if (!this.state.selectedItem) {
@@ -134,6 +120,60 @@ export default class Home extends Component {
                 }
                 
             }
+        } else {
+            // 再次点击选中的棋子，取消选中
+            if (this.state.selectedItem.id === item.id) {
+                this.setState({
+                    selectedItem: ''
+                });
+                return;
+            }
+            if (this.state.selectedItem.color === item.color) {
+                message.error("相同颜色不能操作");
+                return;
+            }
+            this.operateChess(item);
+        }
+        
+        //已选中本方棋子，选中对方棋子进行操作
+        if (this.state.selectedItem) {
+            // // 再次点击选中的棋子，取消选中
+            // if (this.state.selectedItem.id === item.id) {
+            //     this.setState({
+            //         selectedItem: ''
+            //     });
+            //     return;
+            // }
+            // if (this.state.selectedItem.color === item.color) {
+            //     message.error("相同颜色不能操作");
+            //     return;
+            // }
+            // this.operateChess(item);
+        } else {
+            //  // 判断此棋子是否已翻开
+            // if (item.state == 'NONE') {
+            //     this.setState({
+            //         selectedItem: '',
+            //         selectedOpponentItem: ''
+            //     })
+            //     this.reverseChess(item);
+            // } else if (item.state == 'DISPLAY') {
+            //     if (item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
+            //         return;
+            //     }
+            //     if (!this.state.selectedItem) {
+            //         if (item.code == '') {
+            //             return;
+            //         }
+            //         // 选中要操作的棋子
+            //         this.setState({
+            //             selectedItem: item
+            //         })
+            //     } else {
+            //         this.operateChess(item);
+            //     }
+                
+            // }
         }
        
     }
@@ -302,20 +342,24 @@ export default class Home extends Component {
     }
     handleCancel() {
         message.success('和局')
-      }
-      handleRest() {
+    }
+    handleRest() {
         auth.fetch('/initData','get','',(result)=>{
             if (result && result.result == 0) {
-              message.success('重开成功');
-              this.setState({
-                  role: 'CONSUMER',
-                  semaphore: 1
-              })
+                message.success('重开成功');
+                localStorage.setItem('role', '');
+                localStorage.setItem('state', '');
+                localStorage.setItem('color', '');
+                this.setState({
+                    selectedItem: '',
+                    role: 'CONSUMER',
+                    semaphore: 1
+                })
             } else {
-              message.error('重开失败');
+                message.error('重开失败');
             }
         });
-      }
+    }
     render() {
         const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
         return (
