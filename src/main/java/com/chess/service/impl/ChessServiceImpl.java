@@ -135,6 +135,7 @@ public class ChessServiceImpl implements ChessService {
         }
         String chessCode = chess.getCode();
         String opponentChessCode = opponentChess.getCode();
+        // opponentChess的name、code、color为空，则是移动操作
         if ("".equals(opponentChessCode)) {
             if (move(chess, opponentChess)) {
                 personService.updateState(personId, opponentId, personState);
@@ -145,17 +146,20 @@ public class ChessServiceImpl implements ChessService {
             }
             return map;
         }
-        if (chessCode.equals(opponentChessCode)) {
+        boolean isAdjacent = checkIsAdjacent(chess, opponentChess);
+        if (isAdjacent && chessCode.equals(opponentChessCode)) {
             if (flip(chessId, opponentChessId)) {
                 personService.updateState(personId, opponentId, personState);
                 map.put("result", "0");
-                map.put("msg", "翻子成功");
+                map.put("msg", "兑子成功");
             } else {
                 map.put("result", "1");
-                map.put("msg", "翻子失败");
+                map.put("msg", "兑子失败");
             }
             return map;
         }
+
+        //
         if ("pao".equals(chessCode)) {
             map = eat(chess, opponentChess);
             if ("0".equals(map.get("result"))) {
@@ -164,7 +168,6 @@ public class ChessServiceImpl implements ChessService {
             return map;
         }
 
-        boolean isAdjacent = checkIsAdjacent(chess, opponentChess);
         if (isAdjacent) {
             if ("bing".equals(chessCode) && "jiang".equals(opponentChessCode)) {
                 map = soldier(chess, opponentChess);
