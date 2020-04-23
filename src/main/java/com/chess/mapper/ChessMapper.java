@@ -32,4 +32,6 @@ public interface ChessMapper {
     List<ChessDomain> listPaoX(@RequestParam("fromX") String fromX, @RequestParam("toX") String toX, @RequestParam("y") String y);
 
     List<ChessDomain> listPaoY(@RequestParam("fromY") String fromY, @RequestParam("toY") String toY, @RequestParam("x") String x);
+
+    List<ChessDomain> listRetain(@RequestParam("color") String color);
 }

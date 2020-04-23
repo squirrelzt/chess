@@ -122,7 +122,6 @@ public class ChessServiceImpl implements ChessService {
     @Override
     public Map operate(String chessId, String opponentChessId, String personId, String opponentId, String personState) {
         Map map = new HashMap();
-//        personService.updateState(personId, opponentId, personState);
         List<ChessDomain> chessList = chessMapper.queryById(chessId);
         List<ChessDomain> opponentList = chessMapper.queryById(opponentChessId);
         ChessDomain chess = null;
@@ -141,6 +140,7 @@ public class ChessServiceImpl implements ChessService {
                 personService.updateState(personId, opponentId, personState);
                 map.put("result", "0");
                 map.put("msg", "棋子移动成功");
+                map.put("victory", checkVictory(opponentChess.getColor()));
             } else {
                 map.put("result", "1");
             }
@@ -152,6 +152,7 @@ public class ChessServiceImpl implements ChessService {
                 personService.updateState(personId, opponentId, personState);
                 map.put("result", "0");
                 map.put("msg", "兑子成功");
+                map.put("victory", checkVictory(opponentChess.getColor()));
             } else {
                 map.put("result", "1");
                 map.put("msg", "兑子失败");
@@ -165,6 +166,7 @@ public class ChessServiceImpl implements ChessService {
             if ("0".equals(map.get("result"))) {
                 personService.updateState(personId, opponentId, personState);
             }
+            map.put("victory", checkVictory(opponentChess.getColor()));
             return map;
         }
 
@@ -174,6 +176,7 @@ public class ChessServiceImpl implements ChessService {
                 if ("0".equals(map.get("result"))) {
                     personService.updateState(personId, opponentId, personState);
                 }
+                map.put("victory", checkVictory(opponentChess.getColor()));
                 return map;
             }
 
@@ -182,12 +185,14 @@ public class ChessServiceImpl implements ChessService {
                 if ("0".equals(map.get("result"))) {
                     personService.updateState(personId, opponentId, personState);
                 }
+                map.put("victory", checkVictory(opponentChess.getColor()));
                 return map;
             }
             map = power(chess, opponentChess);
             if ("0".equals(map.get("result"))) {
                 personService.updateState(personId, opponentId, personState);
             }
+            map.put("victory", checkVictory(opponentChess.getColor()));
             return map;
         } else {
             map.put("result", "1");
@@ -375,6 +380,15 @@ public class ChessServiceImpl implements ChessService {
                     return false;
                 }
             }
+        }
+    }
+
+    private boolean checkVictory(String opponentColor) {
+        List<ChessDomain> list = chessMapper.listRetain(opponentColor);
+        if (list.size() == 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
