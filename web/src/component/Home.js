@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Row, Col, Button, message } from 'antd';
+import { Icon, Row, Col, Button, message, Modal } from 'antd';
 import { auth } from '../common/auth';
 import './css/home.less'
 
@@ -14,7 +14,8 @@ export default class Home extends Component {
             data: [],
             started: false,
             semaphore: 1,
-            role: 'CONSUMER'
+            role: 'CONSUMER',
+            modalVisible: false
         }
     }
     
@@ -134,48 +135,6 @@ export default class Home extends Component {
             }
             this.operateChess(item);
         }
-        
-        //已选中本方棋子，选中对方棋子进行操作
-        if (this.state.selectedItem) {
-            // // 再次点击选中的棋子，取消选中
-            // if (this.state.selectedItem.id === item.id) {
-            //     this.setState({
-            //         selectedItem: ''
-            //     });
-            //     return;
-            // }
-            // if (this.state.selectedItem.color === item.color) {
-            //     message.error("相同颜色不能操作");
-            //     return;
-            // }
-            // this.operateChess(item);
-        } else {
-            //  // 判断此棋子是否已翻开
-            // if (item.state == 'NONE') {
-            //     this.setState({
-            //         selectedItem: '',
-            //         selectedOpponentItem: ''
-            //     })
-            //     this.reverseChess(item);
-            // } else if (item.state == 'DISPLAY') {
-            //     if (item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
-            //         return;
-            //     }
-            //     if (!this.state.selectedItem) {
-            //         if (item.code == '') {
-            //             return;
-            //         }
-            //         // 选中要操作的棋子
-            //         this.setState({
-            //             selectedItem: item
-            //         })
-            //     } else {
-            //         this.operateChess(item);
-            //     }
-                
-            // }
-        }
-       
     }
 
     // 兑子，吃子，移动操作
@@ -247,6 +206,11 @@ export default class Home extends Component {
         }
         auth.fetch('/operate','get',params,(result)=>{
             if (result && result.result == 0) {
+                if (result.victory) {
+                    this.setState({
+                        modalVisible: true
+                    })
+                }
                 this.setState({
                     selectedItem: ''
                 })
@@ -278,7 +242,7 @@ export default class Home extends Component {
             this.commonReverseChess(item.id);
         }
          if (!role) {
-            //TODO 第一次翻子
+            // 第一次翻子
             semaphore = 0;
             this.setState({
                 items,
@@ -360,6 +324,11 @@ export default class Home extends Component {
             }
         });
     }
+    handleModal() {
+        this.setState({
+            modalVisible: false
+        })
+    }
     render() {
         const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
         return (
@@ -393,6 +362,14 @@ export default class Home extends Component {
                         })
                         }
                     </div>
+                    <Modal
+                        title="结束提示"
+                        visible={this.state.modalVisible}
+                        onOk={this.handleModal.bind(this)}
+                        onCancel={this.handleModal.bind(this)}
+                        >
+                        <p>恭喜您，赢了本局！</p>
+                    </Modal>
                 </div>
             </div>
         );
