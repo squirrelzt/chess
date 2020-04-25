@@ -128,7 +128,7 @@ export default class Home extends Component {
                 });
                 return;
             }
-            if (this.state.selectedItem.color === item.color) {
+            if (this.state.selectedItem.color === item.color && this.state.selectedItem.code !== 'pao') {
                 message.error("相同颜色不能操作");
                 return;
             }
@@ -142,7 +142,7 @@ export default class Home extends Component {
         const selectedY = this.state.selectedItem.y;
         const selectedColor = this.state.selectedItem.color;
         // 颜色相同，重新选择
-        if (selectedColor == selectedOpponentItem.color) {
+        if (selectedColor == selectedOpponentItem.color && this.state.selectedItem.code !== 'pao') {
             this.setState({
                 selectedItem: selectedOpponentItem
             })
