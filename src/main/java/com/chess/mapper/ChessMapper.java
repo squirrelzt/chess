@@ -35,10 +35,10 @@ public interface ChessMapper {
     int shufflecard(@Param("id") String id, @Param("x") String x, @Param("y") String y,
                     @Param("location") String location);
 
-    @Update("update chess set name = '', code = '', color = '' where id = #{id}")
+    @Update("update chess set name = '', code = '', color = '', state = 'DEAD' where id = #{id}")
     int deleteChess(@RequestParam("id") String id);
 
-    @Update("update chess set name = #{name}, code = #{code}, color = #{color} where id = #{id}")
+    @Update("update chess set name = #{name}, code = #{code}, color = #{color}, state = 'DISPLAY' where id = #{id}")
     int move(@RequestParam("id") String id, @RequestParam("name") String name, @RequestParam("code") String code, @RequestParam("color") String color);
 
     @Select("select id, name, code, color, x, y, state, location from chess\n" +
