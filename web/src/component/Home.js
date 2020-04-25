@@ -14,8 +14,7 @@ export default class Home extends Component {
             data: [],
             started: false,
             semaphore: 1,
-            role: 'CONSUMER',
-            modalVisible: false
+            role: 'CONSUMER'
         }
     }
     
@@ -206,6 +205,7 @@ export default class Home extends Component {
         }
         auth.fetch('/operate','get',params,(result)=>{
             if (result && result.result == 0) {
+
                 if (result.victory) {
                     this.setState({
                         modalVisible: true
@@ -347,8 +347,9 @@ export default class Home extends Component {
                                             <Col span={3} key={colIndex}>
                                                 <Button shape="circle" 
                                                 style={{color:colItem?colItem.color:'#fff',
-                                                        backgroundColor: selectedItem && (selectedItem.x == colItem.x &&
-                                                            selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan'}}
+                                                        backgroundColor: colItem.state==='DEAD'?'peru':
+                                                        (selectedItem && (selectedItem.x == colItem.x &&
+                                                            selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan')}}
                                                 onClick={this.onSelect.bind(this, colItem)}
                                                 disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
                                                     {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
