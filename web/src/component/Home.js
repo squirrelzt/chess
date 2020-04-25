@@ -24,7 +24,7 @@ export default class Home extends Component {
         });
     }
 
-    initData(data) {
+    initData = (data) => {
         const items = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']];
         if (data) {
             data.forEach(element => {
@@ -52,7 +52,7 @@ export default class Home extends Component {
     }
 
     //查询页面状态是active还是lock
-    fetchChesserById(params) {
+    fetchChesserById = (params) => {
         auth.fetch('/queryPersonById','get',params,(result)=>{
             const role = result.role;
             const state = result.state;
@@ -67,7 +67,7 @@ export default class Home extends Component {
     }
 
     // 锁定页面
-    lockFrame(state, role) {
+    lockFrame = (state, role) => {
         let semaphore = 0;
         if (state == 'ACTIVE' && role == 'CONSUMER') {
             semaphore = 1;
@@ -84,7 +84,7 @@ export default class Home extends Component {
         })
     }
     // 点击棋子
-    onSelect(item) {
+    onSelect = (item) => {
         // 未加载数据，返回
         if (!item) {
             return;
@@ -137,7 +137,7 @@ export default class Home extends Component {
     }
 
     // 兑子，吃子，移动操作
-    operateChess(selectedOpponentItem) {
+    operateChess = (selectedOpponentItem) => {
         const selectedX = this.state.selectedItem.x;
         const selectedY = this.state.selectedItem.y;
         const selectedColor = this.state.selectedItem.color;
@@ -166,7 +166,7 @@ export default class Home extends Component {
 
     }
 
-    operation(selectedItem, selectedOpponentItem) {
+    operation = (selectedItem, selectedOpponentItem) => {
         const chessId = selectedItem.id;
         const code = selectedItem.code;
 
@@ -221,7 +221,7 @@ export default class Home extends Component {
     }
     
     // 翻子
-    reverseChess(item) {
+    reverseChess = (item) => {
         let items = this.state.items;
         let semaphore = this.state.semaphore;
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
@@ -251,7 +251,7 @@ export default class Home extends Component {
             this.firstReverseChess(item.id, item.color);
         }
     }
-    commonReverseChess(itemId) {
+    commonReverseChess = (itemId) => {
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
         let personState = localStorage.getItem('state');
@@ -283,7 +283,7 @@ export default class Home extends Component {
         });
     }
     //第一次翻子
-    firstReverseChess(itemId,itemColor) {
+    firstReverseChess = (itemId,itemColor) => {
         localStorage.setItem('role','CONSUMER');
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
@@ -304,10 +304,10 @@ export default class Home extends Component {
             }
         });
     }
-    handleCancel() {
+    handleCancel = (e) => {
         message.success('和局')
     }
-    handleRest() {
+    handleRest = (e) => {
         auth.fetch('/initData','get','',(result)=>{
             if (result && result.result == 0) {
                 message.success('重开成功');
@@ -324,7 +324,7 @@ export default class Home extends Component {
             }
         });
     }
-    handleModal() {
+    handleModal = () => {
         this.setState({
             modalVisible: false
         })
@@ -350,7 +350,7 @@ export default class Home extends Component {
                                                         backgroundColor: colItem.state==='DEAD'?'peru':
                                                         (selectedItem && (selectedItem.x == colItem.x &&
                                                             selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan')}}
-                                                onClick={this.onSelect.bind(this, colItem)}
+                                                onClick={()=>this.onSelect(colItem)}
                                                 disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
                                                     {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
