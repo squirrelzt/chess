@@ -50,4 +50,8 @@
     where y &gt; #{fromY} and y &lt; #{toY} and x = #{x}
     and name != '' and code != '' and color != ''
   </select>
+
+  <select id="listRetain" resultMap="BaseResultMap">
+    SELECT id, name, code, color, x, y, state, location FROM chess WHERE color = #{color}
+  </select>
 </mapper>
