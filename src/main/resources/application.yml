@@ -25,7 +25,7 @@ spring:
     hibernate:
       ddl-auto: update
 
-  #H2控制台:http://localhost:8081/h2-console
+  #H2控制台:http://localhost:8090/h2-console
   h2:
     console:
       path: /h2-console
