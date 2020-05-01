@@ -14,6 +14,9 @@ server:
  #   log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 spring:
+  output:
+    ansi:
+      enabled: always
   datasource:
     url: jdbc:h2:~/chess
     driver-class-name: org.h2.Driver
