@@ -61,6 +61,7 @@ public class ChessServiceImpl implements ChessService {
      * @return
      */
     @Override
+    @Deprecated
     public boolean insertChess() {
         String chessArray[][] = InitDataConstants.chessArray;
         int count = 0;
