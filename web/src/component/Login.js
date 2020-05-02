@@ -1,40 +1,57 @@
 import React, { Component } from 'react';
 import {  Form, Icon, Button, message, Input } from 'antd';
 import { auth } from '../common/auth';
-import './css/login.less'
+import './css/login.less';
+import store from './../store/index';
 
 class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            username: '',
-            password: ''
+        // this.state = {
+        //     username: '',
+        //     password: ''
+        // }
+        this.state = store.getState();
+        store.subscribe(this.handleStoreChange)
+    }
+
+    componentDidMount = () => {
+
+    }
+
+    handleStoreChange = () => {
+        this.setState(store.getState())
+    }
+
+    handleInputUsername = (e) => {
+        // const username = e.target.value;
+        // this.setState({
+        //     username
+        // });
+        const action = {
+            type: 'handle_input_username',
+            value: e.target.value
         }
+        store.dispatch(action);
     }
-
-    componentDidMount() {
-
+    handleInputPassword = (e) => {
+        // const password = e.target.value;
+        // this.setState({
+        //     password
+        // });
+        const action = {
+            type: 'handle_input_password',
+            value: e.target.value
+        }
+        store.dispatch(action);
     }
-
-    handleInputUsername(e) {
-        const username = e.target.value;
-        this.setState({
-            username
-        });
-    }
-    handleInputPassword(e) {
-        const password = e.target.value;
-        this.setState({
-            password
-        });
-    }
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         this.fetch({
             username: this.state.username,
             password: this.state.password
         })
     }
-    fetch(params = {}) {
+    fetch = (params = {}) => {
         auth.fetch('/logins','get',params,(result)=>{
             if (result.result == 0) {
                 result.data.id ? localStorage.setItem('id', result.data.id):'';

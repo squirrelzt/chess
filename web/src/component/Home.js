@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
 import { Icon, Row, Col, Button, message, Modal } from 'antd';
 import { auth } from '../common/auth';
-import './css/home.less'
+import './css/home.less';
+import store from './../store/index';
 
 export default class Home extends Component {
     constructor(props) {
         super(props);
-        this.state={
-            items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
-            selectedItem: '',
-            selectedOpponentItem: '',
-            selectedItemBackgroudColor: '#6387ea',
-            data: [],
-            started: false,
-            semaphore: 1,
-            role: 'CONSUMER'
-        }
+        // this.state={
+        //     items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
+        //     selectedItem: '',
+        //     selectedOpponentItem: '',
+        //     selectedItemBackgroudColor: '#6387ea',
+        //     data: [],
+        //     started: false,
+        //     semaphore: 1,
+        //     role: 'CONSUMER'
+        // }
+        this.state = store.getState();
+        store.subscribe(this.handleStoreChange)
     }
     
-    fetch(params = {}) {
+    handleStoreChange = () => {
+        this.setState(store.getState())
+    }
+
+    fetch = (params = {}) => {
         auth.fetch('/query','get',params,(result)=>{
             this.initData(result);
         });
@@ -30,13 +37,18 @@ export default class Home extends Component {
             data.forEach(element => {
                 items[element.x-1][element.y-1] = element;
             });
-            this.setState({
-                items
-            })
+            const action = {
+                type: 'init_data',
+                value: items
+            }
+            store.dispatch(action);
+            // this.setState({
+            //     items
+            // })
         }
     }
 
-    componentDidMount(){
+    componentDidMount = () => {
         const id = localStorage.getItem('id');
         if (id) {
             this.fetch();
@@ -78,10 +90,18 @@ export default class Home extends Component {
         } else if (state == 'LOCK' && role == 'PRODUCER') {
             semaphore = 1;
         }
-        this.setState({
-            semaphore,
-            role
-        })
+        const action = {
+            type: 'lock_frame',
+            value: {
+                semaphore,
+                role
+            }
+        }
+        store.dispatch(action);
+        // this.setState({
+        //     semaphore,
+        //     role
+        // })
     }
     // 点击棋子
     onSelect = (item) => {
@@ -112,9 +132,14 @@ export default class Home extends Component {
                         return;
                     }
                     // 选中要操作的棋子
-                    this.setState({
-                        selectedItem: item
-                    })
+                    // this.setState({
+                    //     selectedItem: item
+                    // })
+                    const action = {
+                        type: 'select_item',
+                        value: item
+                    }
+                    store.dispatch(action);
                 } else {
                     this.operateChess(item);
                 }
@@ -123,9 +148,14 @@ export default class Home extends Component {
         } else {
             // 再次点击选中的棋子，取消选中
             if (this.state.selectedItem.id === item.id) {
-                this.setState({
-                    selectedItem: ''
-                });
+                // this.setState({
+                //     selectedItem: ''
+                // });
+                const action = {
+                    type: 'select_item',
+                    value: ''
+                }
+                store.dispatch(action);
                 return;
             }
             if (this.state.selectedItem.color === item.color && this.state.selectedItem.code !== 'pao') {
@@ -143,9 +173,14 @@ export default class Home extends Component {
         const selectedColor = this.state.selectedItem.color;
         // 颜色相同，重新选择
         if (selectedColor == selectedOpponentItem.color && this.state.selectedItem.code !== 'pao') {
-            this.setState({
-                selectedItem: selectedOpponentItem
-            })
+            // this.setState({
+            //     selectedItem: selectedOpponentItem
+            // })
+            const action = {
+                type: 'select_item',
+                value: selectedOpponentItem
+            }
+            store.dispatch(action);
             return;
         }
         if (selectedX != selectedOpponentItem.x && selectedY != selectedOpponentItem.y) {
@@ -162,8 +197,6 @@ export default class Home extends Component {
         localStorage.setItem('state', state);
         this.lockFrame(state, localStorage.getItem('role'));
         this.operation(this.state.selectedItem, selectedOpponentItem);
-     
-
     }
 
     operation = (selectedItem, selectedOpponentItem) => {
@@ -205,15 +238,24 @@ export default class Home extends Component {
         }
         auth.fetch('/operate','get',params,(result)=>{
             if (result && result.result == 0) {
-
                 if (result.victory) {
-                    this.setState({
-                        modalVisible: true
-                    })
+                    // this.setState({
+                    //     modalVisible: true
+                    // })
+                    const modalVisibleAction = {
+                        type: 'operate_modal_visible',
+                        value: true
+                    }
+                    store.dispatch(modalVisibleAction);
                 }
-                this.setState({
-                    selectedItem: ''
-                })
+                // this.setState({
+                //     selectedItem: ''
+                // })
+                const action = {
+                    type: 'select_item',
+                    value: ''
+                }
+                store.dispatch(action);
             } else if (result && result.result == 1) {
                 message.error(result.msg);
             }
@@ -226,28 +268,38 @@ export default class Home extends Component {
         let semaphore = this.state.semaphore;
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
         const role = localStorage.getItem('role');
-        if (role == 'CONSUMER') {
-            semaphore = 0;
-            this.setState({
+        const action = {
+            type: 'reverse_chess',
+            value: {
                 items,
                 semaphore
-            });
+            }
+        }
+        if (role == 'CONSUMER') {
+            semaphore = 0;
+            // this.setState({
+            //     items,
+            //     semaphore
+            // });
+            store.dispatch(action);
             this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
-            this.setState({
-                items,
-                semaphore
-            });
+            // this.setState({
+            //     items,
+            //     semaphore
+            // });
+            store.dispatch(action);
             this.commonReverseChess(item.id);
         }
          if (!role) {
             // 第一次翻子
             semaphore = 0;
-            this.setState({
-                items,
-                semaphore
-            });
+            // this.setState({
+            //     items,
+            //     semaphore
+            // });
+            store.dispatch(action);
             this.firstReverseChess(item.id, item.color);
         }
     }
@@ -307,27 +359,44 @@ export default class Home extends Component {
     handleCancel = (e) => {
         message.success('和局')
     }
-    handleRest = (e) => {
+    handleReset = (e) => {
         auth.fetch('/initData','get','',(result)=>{
             if (result && result.result == 0) {
                 message.success('重开成功');
-                localStorage.setItem('role', '');
-                localStorage.setItem('state', '');
-                localStorage.setItem('color', '');
-                this.setState({
-                    selectedItem: '',
-                    role: 'CONSUMER',
-                    semaphore: 1
-                })
+                const action = {
+                    type: 'handle_reset',
+                    value: {
+                        localStorageSetItemRole: '',
+                        localStorageSetItemState: '',
+                        localStorageSetItemColor: '',
+                        selectedItem: '',
+                        role: 'CONSUMER',
+                        semaphore: 1
+                    }
+                }
+                store.dispatch(action);
+                // localStorage.setItem('role', '');
+                // localStorage.setItem('state', '');
+                // localStorage.setItem('color', '');
+                // this.setState({
+                //     selectedItem: '',
+                //     role: 'CONSUMER',
+                //     semaphore: 1
+                // })
             } else {
                 message.error('重开失败');
             }
         });
     }
     handleModal = () => {
-        this.setState({
-            modalVisible: false
-        })
+        // this.setState({
+        //     modalVisible: false
+        // })
+        const modalVisibleAction = {
+            type: 'operate_modal_visible',
+            value: false
+        }
+        store.dispatch(modalVisibleAction);
     }
     render() {
         const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
@@ -335,7 +404,7 @@ export default class Home extends Component {
             <div className="btn-margin">
                 <div className="monitor-frame">
                     <div className="layout-operation">
-                        <Button type="primary" size="large" onClick={this.handleRest.bind(this)}>重开</Button>
+                        <Button type="primary" size="large" onClick={this.handleReset.bind(this)}>重开</Button>
                         <Button type="primary" onClick={this.handleCancel.bind(this)}>结束</Button>
                     </div>
                     <div className="chess-container">
