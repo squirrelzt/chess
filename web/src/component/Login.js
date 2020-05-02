@@ -3,6 +3,7 @@ import {  Form, Icon, Button, message, Input } from 'antd';
 import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
+import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType'
 
 class Login extends Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class Login extends Component {
         //     username
         // });
         const action = {
-            type: 'handle_input_username',
+            type: HANDLE_INPUT_USERNAME,
             value: e.target.value
         }
         store.dispatch(action);
@@ -40,7 +41,7 @@ class Login extends Component {
         //     password
         // });
         const action = {
-            type: 'handle_input_password',
+            type: HANDLE_INPUT_PASSWORD,
             value: e.target.value
         }
         store.dispatch(action);
@@ -62,10 +63,18 @@ class Login extends Component {
                 result.data.color ? localStorage.setItem('color', result.data.color):"";
                 window.location.href="./chess";
             } else if (result.result == 1) {
-                this.setState({
-                    username: '',
-                    password: ''
-                });
+                // this.setState({
+                //     username: '',
+                //     password: ''
+                // });
+                const action = {
+                    type: RESET_USERNAME_PASSWORD,
+                    value: {
+                        username: '',
+                        password: '',
+                    }
+                }
+                store.dispatch(action);
                 message.error('用户名或密码错误！');
             }
         });
@@ -84,7 +93,7 @@ class Login extends Component {
                     <Form className='loginForm' >
                         <Form.Item {...formItemLayout}
                             label='用户名'>
-                            <Input onChange={this.handleInputUsername.bind(this)} value={this.state.username}/>
+                            <Input onChange={this.handleInputUsername} value={this.state.username}/>
                         </Form.Item>
                         <Form.Item
                             {...formItemLayout}
@@ -92,12 +101,12 @@ class Login extends Component {
                             hasFeedback>
                             
                             <Input type="password" autoComplete="off" placeholder="请输入密码"
-                                onChange={this.handleInputPassword.bind(this)}
+                                onChange={this.handleInputPassword}
                                 value={this.state.password}/>
                         </Form.Item>
 
                         <Form.Item wrapperCol={{ span: 12, offset: 7 }}>
-                            <Button type="primary" className="loginBtn" style={{width:228}} onClick={this.handleSubmit.bind(this)}>登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</Button>
+                            <Button type="primary" className="loginBtn" style={{width:228}} onClick={this.handleSubmit}>登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</Button>
                         </Form.Item>
                     </Form>
                 </div>

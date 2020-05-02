@@ -3,6 +3,7 @@ import { Icon, Row, Col, Button, message, Modal } from 'antd';
 import { auth } from '../common/auth';
 import './css/home.less';
 import store from './../store/index';
+import { INIT_DATA, HANDLE_RESET, LOCK_FRAME, SELECT_ITEM, OPERATE_MODAL_VISIBLE, REVERSE_CHESS } from './../store/actionType'
 
 export default class Home extends Component {
     constructor(props) {
@@ -38,7 +39,7 @@ export default class Home extends Component {
                 items[element.x-1][element.y-1] = element;
             });
             const action = {
-                type: 'init_data',
+                type: INIT_DATA,
                 value: items
             }
             store.dispatch(action);
@@ -91,7 +92,7 @@ export default class Home extends Component {
             semaphore = 1;
         }
         const action = {
-            type: 'lock_frame',
+            type: LOCK_FRAME,
             value: {
                 semaphore,
                 role
@@ -136,7 +137,7 @@ export default class Home extends Component {
                     //     selectedItem: item
                     // })
                     const action = {
-                        type: 'select_item',
+                        type: SELECT_ITEM,
                         value: item
                     }
                     store.dispatch(action);
@@ -152,7 +153,7 @@ export default class Home extends Component {
                 //     selectedItem: ''
                 // });
                 const action = {
-                    type: 'select_item',
+                    type: SELECT_ITEM,
                     value: ''
                 }
                 store.dispatch(action);
@@ -177,7 +178,7 @@ export default class Home extends Component {
             //     selectedItem: selectedOpponentItem
             // })
             const action = {
-                type: 'select_item',
+                type: SELECT_ITEM,
                 value: selectedOpponentItem
             }
             store.dispatch(action);
@@ -243,7 +244,7 @@ export default class Home extends Component {
                     //     modalVisible: true
                     // })
                     const modalVisibleAction = {
-                        type: 'operate_modal_visible',
+                        type: OPERATE_MODAL_VISIBLE,
                         value: true
                     }
                     store.dispatch(modalVisibleAction);
@@ -252,7 +253,7 @@ export default class Home extends Component {
                 //     selectedItem: ''
                 // })
                 const action = {
-                    type: 'select_item',
+                    type: SELECT_ITEM,
                     value: ''
                 }
                 store.dispatch(action);
@@ -269,7 +270,7 @@ export default class Home extends Component {
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
         const role = localStorage.getItem('role');
         const action = {
-            type: 'reverse_chess',
+            type: REVERSE_CHESS,
             value: {
                 items,
                 semaphore
@@ -364,7 +365,7 @@ export default class Home extends Component {
             if (result && result.result == 0) {
                 message.success('重开成功');
                 const action = {
-                    type: 'handle_reset',
+                    type: HANDLE_RESET,
                     value: {
                         localStorageSetItemRole: '',
                         localStorageSetItemState: '',
@@ -393,7 +394,7 @@ export default class Home extends Component {
         //     modalVisible: false
         // })
         const modalVisibleAction = {
-            type: 'operate_modal_visible',
+            type: OPERATE_MODAL_VISIBLE,
             value: false
         }
         store.dispatch(modalVisibleAction);
