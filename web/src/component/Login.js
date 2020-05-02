@@ -3,7 +3,8 @@ import {  Form, Icon, Button, message, Input } from 'antd';
 import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
-import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType'
+import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType';
+import { getHandleInputUsernameAction, getHandleInputPasswordAction, getResetUsernamePasswordAction } from './../store/actionCreators';
 
 class Login extends Component {
     constructor(props) {
@@ -29,10 +30,11 @@ class Login extends Component {
         // this.setState({
         //     username
         // });
-        const action = {
-            type: HANDLE_INPUT_USERNAME,
-            value: e.target.value
-        }
+        // const action = {
+        //     type: HANDLE_INPUT_USERNAME,
+        //     value: e.target.value
+        // }
+        const action = getHandleInputUsernameAction(e.target.value);
         store.dispatch(action);
     }
     handleInputPassword = (e) => {
@@ -40,10 +42,11 @@ class Login extends Component {
         // this.setState({
         //     password
         // });
-        const action = {
-            type: HANDLE_INPUT_PASSWORD,
-            value: e.target.value
-        }
+        // const action = {
+        //     type: HANDLE_INPUT_PASSWORD,
+        //     value: e.target.value
+        // }
+        const action = getHandleInputPasswordAction(e.target.value);
         store.dispatch(action);
     }
     handleSubmit = (e) => {
@@ -67,13 +70,14 @@ class Login extends Component {
                 //     username: '',
                 //     password: ''
                 // });
-                const action = {
-                    type: RESET_USERNAME_PASSWORD,
-                    value: {
-                        username: '',
-                        password: '',
-                    }
-                }
+                // const action = {
+                //     type: RESET_USERNAME_PASSWORD,
+                //     value: {
+                //         username: '',
+                //         password: '',
+                //     }
+                // }
+                const action = getResetUsernamePasswordAction('', '');
                 store.dispatch(action);
                 message.error('用户名或密码错误！');
             }

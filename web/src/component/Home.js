@@ -4,6 +4,14 @@ import { auth } from '../common/auth';
 import './css/home.less';
 import store from './../store/index';
 import { INIT_DATA, HANDLE_RESET, LOCK_FRAME, SELECT_ITEM, OPERATE_MODAL_VISIBLE, REVERSE_CHESS } from './../store/actionType'
+import { 
+    getInitDataAction, 
+    getHandleResetAction,
+    getLockFrameAction,
+    getSelectItemAction,
+    getOperateModalVisibleAction,
+    getReverseChess
+ } from './../store/actionCreators';
 
 export default class Home extends Component {
     constructor(props) {
@@ -38,10 +46,11 @@ export default class Home extends Component {
             data.forEach(element => {
                 items[element.x-1][element.y-1] = element;
             });
-            const action = {
-                type: INIT_DATA,
-                value: items
-            }
+            // const action = {
+            //     type: INIT_DATA,
+            //     value: items
+            // }
+            const action = getInitDataAction(items);
             store.dispatch(action);
             // this.setState({
             //     items
@@ -91,13 +100,14 @@ export default class Home extends Component {
         } else if (state == 'LOCK' && role == 'PRODUCER') {
             semaphore = 1;
         }
-        const action = {
-            type: LOCK_FRAME,
-            value: {
-                semaphore,
-                role
-            }
-        }
+        // const action = {
+        //     type: LOCK_FRAME,
+        //     value: {
+        //         semaphore,
+        //         role
+        //     }
+        // }
+        const action = getLockFrameAction(semaphore, role);
         store.dispatch(action);
         // this.setState({
         //     semaphore,
@@ -136,10 +146,11 @@ export default class Home extends Component {
                     // this.setState({
                     //     selectedItem: item
                     // })
-                    const action = {
-                        type: SELECT_ITEM,
-                        value: item
-                    }
+                    // const action = {
+                    //     type: SELECT_ITEM,
+                    //     value: item
+                    // }
+                    const action = getSelectItemAction(item);
                     store.dispatch(action);
                 } else {
                     this.operateChess(item);
@@ -152,10 +163,11 @@ export default class Home extends Component {
                 // this.setState({
                 //     selectedItem: ''
                 // });
-                const action = {
-                    type: SELECT_ITEM,
-                    value: ''
-                }
+                // const action = {
+                //     type: SELECT_ITEM,
+                //     value: ''
+                // }
+                const action = getSelectItemAction(item);
                 store.dispatch(action);
                 return;
             }
@@ -177,10 +189,11 @@ export default class Home extends Component {
             // this.setState({
             //     selectedItem: selectedOpponentItem
             // })
-            const action = {
-                type: SELECT_ITEM,
-                value: selectedOpponentItem
-            }
+            // const action = {
+            //     type: SELECT_ITEM,
+            //     value: selectedOpponentItem
+            // }
+            const action = getSelectItemAction(item);
             store.dispatch(action);
             return;
         }
@@ -243,19 +256,21 @@ export default class Home extends Component {
                     // this.setState({
                     //     modalVisible: true
                     // })
-                    const modalVisibleAction = {
-                        type: OPERATE_MODAL_VISIBLE,
-                        value: true
-                    }
+                    // const modalVisibleAction = {
+                    //     type: OPERATE_MODAL_VISIBLE,
+                    //     value: true
+                    // }
+                    const modalVisibleAction = getOperateModalVisibleAction(true);
                     store.dispatch(modalVisibleAction);
                 }
                 // this.setState({
                 //     selectedItem: ''
                 // })
-                const action = {
-                    type: SELECT_ITEM,
-                    value: ''
-                }
+                // const action = {
+                //     type: SELECT_ITEM,
+                //     value: ''
+                // }
+                const action = getSelectItemAction('');
                 store.dispatch(action);
             } else if (result && result.result == 1) {
                 message.error(result.msg);
@@ -269,13 +284,14 @@ export default class Home extends Component {
         let semaphore = this.state.semaphore;
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
         const role = localStorage.getItem('role');
-        const action = {
-            type: REVERSE_CHESS,
-            value: {
-                items,
-                semaphore
-            }
-        }
+        // const action = {
+        //     type: REVERSE_CHESS,
+        //     value: {
+        //         items,
+        //         semaphore
+        //     }
+        // }
+        const action = getReverseChess(items, semaphore)
         if (role == 'CONSUMER') {
             semaphore = 0;
             // this.setState({
@@ -364,17 +380,18 @@ export default class Home extends Component {
         auth.fetch('/initData','get','',(result)=>{
             if (result && result.result == 0) {
                 message.success('重开成功');
-                const action = {
-                    type: HANDLE_RESET,
-                    value: {
-                        localStorageSetItemRole: '',
-                        localStorageSetItemState: '',
-                        localStorageSetItemColor: '',
-                        selectedItem: '',
-                        role: 'CONSUMER',
-                        semaphore: 1
-                    }
-                }
+                // const action = {
+                //     type: HANDLE_RESET,
+                //     value: {
+                //         localStorageSetItemRole: '',
+                //         localStorageSetItemState: '',
+                //         localStorageSetItemColor: '',
+                //         selectedItem: '',
+                //         role: 'CONSUMER',
+                //         semaphore: 1
+                //     }
+                // }
+                const action = getHandleResetAction('', '', '', '', 'CONSUMER', 1);
                 store.dispatch(action);
                 // localStorage.setItem('role', '');
                 // localStorage.setItem('state', '');
@@ -393,10 +410,11 @@ export default class Home extends Component {
         // this.setState({
         //     modalVisible: false
         // })
-        const modalVisibleAction = {
-            type: OPERATE_MODAL_VISIBLE,
-            value: false
-        }
+        // const modalVisibleAction = {
+        //     type: OPERATE_MODAL_VISIBLE,
+        //     value: false
+        // }
+        const modalVisibleAction = getOperateModalVisibleAction(true);
         store.dispatch(modalVisibleAction);
     }
     render() {
