@@ -1,0 +1,36 @@
+INSERT INTO `chess` VALUES (1, '帅', 'RED', '1', '1', 'NONE', '11');
+INSERT INTO `chess` VALUES (2, '士', 'RED', '1', '2', 'NONE', '12');
+INSERT INTO `chess` VALUES (3, '相', 'RED', '1', '3', 'NONE', '13');
+INSERT INTO `chess` VALUES (4, '士', 'RED', '1', '4', 'NONE', '14');
+INSERT INTO `chess` VALUES (5, '相', 'RED', '1', '5', 'NONE', '15');
+INSERT INTO `chess` VALUES (6, '马', 'RED', '1', '6', 'NONE', '16');
+INSERT INTO `chess` VALUES (7, '马', 'RED', '1', '7', 'NONE', '17');
+INSERT INTO `chess` VALUES (8, '车', 'RED', '1', '8', 'NONE', '18');
+INSERT INTO `chess` VALUES (9, '车', 'RED', '2', '1', 'NONE', '21');
+INSERT INTO `chess` VALUES (10, '炮', 'RED', '2', '2', 'NONE', '22');
+INSERT INTO `chess` VALUES (11, '炮', 'RED', '2', '3', 'NONE', '23');
+INSERT INTO `chess` VALUES (12, '兵', 'RED', '2', '4', 'NONE', '24');
+INSERT INTO `chess` VALUES (13, '兵', 'RED', '2', '5', 'NONE', '25');
+INSERT INTO `chess` VALUES (14, '兵', 'RED', '2', '6', 'NONE', '26');
+INSERT INTO `chess` VALUES (15, '兵', 'RED', '2', '7', 'NONE', '27');
+INSERT INTO `chess` VALUES (16, '兵', 'RED', '2', '8', 'NONE', '28');
+INSERT INTO `chess` VALUES (17, '将', 'BLACK', '3', '1', 'NONE', '31');
+INSERT INTO `chess` VALUES (18, '士', 'BLACK', '3', '2', 'NONE', '32');
+INSERT INTO `chess` VALUES (19, '象', 'BLACK', '3', '3', 'NONE', '33');
+INSERT INTO `chess` VALUES (20, '士', 'BLACK', '3', '4', 'NONE', '34');
+INSERT INTO `chess` VALUES (21, '象', 'BLACK', '3', '5', 'NONE', '35');
+INSERT INTO `chess` VALUES (22, '马', 'BLACK', '3', '6', 'NONE', '36');
+INSERT INTO `chess` VALUES (23, '马', 'BLACK', '3', '7', 'NONE', '37');
+INSERT INTO `chess` VALUES (24, '车', 'BLACK', '3', '8', 'NONE', '38');
+INSERT INTO `chess` VALUES (25, '车', 'BLACK', '4', '1', 'NONE', '41');
+INSERT INTO `chess` VALUES (26, '炮', 'BLACK', '4', '2', 'NONE', '42');
+INSERT INTO `chess` VALUES (27, '炮', 'BLACK', '4', '3', 'NONE', '43');
+INSERT INTO `chess` VALUES (28, '卒', 'BLACK', '4', '4', 'NONE', '44');
+INSERT INTO `chess` VALUES (29, '卒', 'BLACK', '4', '5', 'NONE', '45');
+INSERT INTO `chess` VALUES (30, '卒', 'BLACK', '4', '6', 'NONE', '46');
+INSERT INTO `chess` VALUES (31, '卒', 'BLACK', '4', '7', 'NONE', '47');
+INSERT INTO `chess` VALUES (32, '卒', 'BLACK', '4', '8', 'NONE', '48');
+
+
+INSERT INTO `person` VALUES (1, 'zhangsan', '123456', '', '', '', '2');
+INSERT INTO `person` VALUES (2, 'lisi', '123456', '', '', '', '1');
