@@ -335,8 +335,8 @@ export default class Home extends Component {
             <div className="btn-margin">
                 <div className="monitor-frame">
                     <div className="layout-operation">
-                        <Button type="primary" size="large" onClick={this.handleRest.bind(this)}>重开</Button>
-                        <Button type="primary" onClick={this.handleCancel.bind(this)}>结束</Button>
+                        <Button type="primary" size="large" onClick={this.handleRest}>重开</Button>
+                        <Button type="primary" onClick={this.handleCancel}>结束</Button>
                     </div>
                     <div className="chess-container">
                         {items.map((rowItem,rowIndex)=>{
