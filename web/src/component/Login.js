@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {  Form, Icon, Button, message, Input } from 'antd';
 import { auth } from '../common/auth';
 import './css/login.less';
@@ -89,7 +89,7 @@ class Login extends Component {
             wrapperCol: { span: 6 },
         };
         return (
-            <div>
+            <Fragment>
                 <div className='login-container'>
                     <div className="login-title">
                         <span className="sysName">棋盘游戏登录</span>
@@ -114,7 +114,7 @@ class Login extends Component {
                         </Form.Item>
                     </Form>
                 </div>
-            </div>
+            </Fragment>
         )
     }
 }

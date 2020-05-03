@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Icon, Row, Col, Button, message, Modal } from 'antd';
 import { auth } from '../common/auth';
 import './css/home.less';
@@ -420,7 +420,7 @@ export default class Home extends Component {
     render() {
         const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
         return (
-            <div className="btn-margin">
+            <Fragment>
                 <div className="monitor-frame">
                     <div className="layout-operation">
                         <Button type="primary" size="large" onClick={this.handleReset.bind(this)}>重开</Button>
@@ -460,7 +460,7 @@ export default class Home extends Component {
                         <p>恭喜您，赢了本局！</p>
                     </Modal>
                 </div>
-            </div>
+            </Fragment>
         );
     }
 }
