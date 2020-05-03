@@ -96,15 +96,15 @@ class Login extends Component {
                     </div>
                     <Form className='loginForm' >
                         <Form.Item {...formItemLayout}
-                            label='用户名'>
-                            <Input onChange={this.handleInputUsername} value={this.state.username}/>
+                            label='用户名' htmlFor='login-usrename'>
+                            <Input id='login-usrename' onChange={this.handleInputUsername} value={this.state.username}/>
                         </Form.Item>
                         <Form.Item
                             {...formItemLayout}
-                            label="密&nbsp;&nbsp;&nbsp;&nbsp;码："
+                            label="密&nbsp;&nbsp;码："
+                            htmlFor='login-password'
                             hasFeedback>
-                            
-                            <Input type="password" autoComplete="off" placeholder="请输入密码"
+                            <Input id='login-password' type="password" autoComplete="off" placeholder="请输入密码"
                                 onChange={this.handleInputPassword}
                                 value={this.state.password}/>
                         </Form.Item>
