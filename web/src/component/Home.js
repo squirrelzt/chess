@@ -3,7 +3,7 @@ import { Icon, Row, Col, Button, message, Modal } from 'antd';
 import { auth } from '../common/auth';
 import './css/home.less';
 import store from './../store/index';
-import { INIT_DATA, HANDLE_RESET, LOCK_FRAME, SELECT_ITEM, OPERATE_MODAL_VISIBLE, REVERSE_CHESS } from './../store/actionType'
+// import { INIT_DATA, HANDLE_RESET, LOCK_FRAME, SELECT_ITEM, OPERATE_MODAL_VISIBLE, REVERSE_CHESS } from './../store/actionType'
 import { 
     getInitDataAction, 
     getHandleResetAction,
@@ -167,7 +167,7 @@ export default class Home extends Component {
                 //     type: SELECT_ITEM,
                 //     value: ''
                 // }
-                const action = getSelectItemAction(item);
+                const action = getSelectItemAction('');
                 store.dispatch(action);
                 return;
             }
@@ -433,14 +433,15 @@ export default class Home extends Component {
                                     {rowItem.map((colItem, colIndex) => {
                                         return (
                                             <Col span={3} key={colIndex}>
-                                                <Button shape="circle" 
-                                                style={{color:colItem?colItem.color:'#fff',
-                                                        backgroundColor: colItem.state==='DEAD'?'peru':
-                                                        (selectedItem && (selectedItem.x == colItem.x &&
-                                                            selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan')}}
-                                                onClick={()=>this.onSelect(colItem)}
-                                                disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
-                                                    {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
+                                                <Button className='chess-btn'
+                                                    shape="circle" 
+                                                    style={{color:colItem?colItem.color:'#fff',
+                                                            backgroundColor: colItem.state==='DEAD'?'peru':
+                                                            (selectedItem && (selectedItem.x == colItem.x &&
+                                                                selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan')}}
+                                                    onClick={()=>this.onSelect(colItem)}
+                                                    disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
+                                                        {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
                                             </Col>
                                         )

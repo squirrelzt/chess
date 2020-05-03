@@ -3,7 +3,7 @@ import {  Form, Icon, Button, message, Input } from 'antd';
 import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
-import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType';
+// import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType';
 import { getHandleInputUsernameAction, getHandleInputPasswordAction, getResetUsernamePasswordAction } from './../store/actionCreators';
 
 class Login extends Component {
