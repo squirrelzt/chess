@@ -4,7 +4,6 @@ import axios from 'axios';
 import { auth } from '../common/auth';
 import './css/home.less';
 import store from './../store/index';
-// import { INIT_DATA, HANDLE_RESET, LOCK_FRAME, SELECT_ITEM, OPERATE_MODAL_VISIBLE, REVERSE_CHESS } from './../store/actionType'
 import { 
     getInitDataAction, 
     getHandleResetAction,
@@ -25,39 +24,12 @@ import {
 export default class Home extends Component {
     constructor(props) {
         super(props);
-        // this.state={
-        //     items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
-        //     selectedItem: '',
-        //     selectedOpponentItem: '',
-        //     selectedItemBackgroudColor: '#6387ea',
-        //     data: [],
-        //     started: false,
-        //     semaphore: 1,
-        //     role: 'CONSUMER'
-        // }
         this.state = store.getState();
         store.subscribe(this.handleStoreChange)
     }
     
     handleStoreChange = () => {
         this.setState(store.getState())
-    }
-
-    fetch = (params = {}) => {
-        axios.get(auth.getPath() + '/query')
-        .then((response) => {
-            this.initData(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('查询棋子失败');
-        })
-        .then(() => {
-
-        });
-        // auth.fetch('/query','get',params,(result)=>{
-        //     this.initData(result);
-        // });
     }
 
     initData = (data) => {
@@ -81,17 +53,13 @@ export default class Home extends Component {
     componentDidMount = () => {
         const id = localStorage.getItem('id');
         if (id) {
-            // this.fetch();
             const action = initDataAction();
             store.dispatch(action);
-            // this.fetchChesserById({id:id});
             const fetchChessAction = fetchChesserByIdAction({id:id});
             store.dispatch(fetchChessAction);
             setInterval(()=>{
-                // this.fetch();
                 const action = initDataAction();
                 store.dispatch(action);
-                // this.fetchChesserById({id:id});
                 const fetchChessAction = fetchChesserByIdAction({id:id});
                 store.dispatch(fetchChessAction);
             },2000)
@@ -101,39 +69,6 @@ export default class Home extends Component {
         
     }
 
-    //查询页面状态是active还是lock
-    fetchChesserById = (params) => {
-        axios.get(auth.getPath() + '/queryPersonById', { params })
-        .then((response) => {
-            const role = response.data.role;
-            const state = response.data.state;
-            const color = response.data.color;
-            role?localStorage.setItem('role', role):'';
-            state?localStorage.setItem('state', state):'';
-            color?localStorage.setItem('color', color):'';
-            if (state && role) {
-                this.lockFrame(state, role);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('根据id查询用户信息失败');
-        })
-        .then(() => {
-
-        });
-        // auth.fetch('/queryPersonById','get',params,(result)=>{
-        //     const role = result.role;
-        //     const state = result.state;
-        //     const color = result.color;
-        //     localStorage.setItem('role', role);
-        //     localStorage.setItem('state', state);
-        //     localStorage.setItem('color', color);
-        //     if (state && role) {
-        //         this.lockFrame(state, role);
-        //     }
-        // });
-    }
 
     // 锁定页面
     lockFrame = (state, role) => {
@@ -176,10 +111,6 @@ export default class Home extends Component {
             }
              // 判断此棋子是否已翻开
              if (item.state == 'NONE') {
-                // this.setState({
-                //     selectedItem: '',
-                //     selectedOpponentItem: ''
-                // })
                 const action = getClearSelectedAndSelectedOpponentAction('','');
                 store.dispatch(action);
                 this.reverseChess(item);
@@ -192,13 +123,6 @@ export default class Home extends Component {
                         return;
                     }
                     // 选中要操作的棋子
-                    // this.setState({
-                    //     selectedItem: item
-                    // })
-                    // const action = {
-                    //     type: SELECT_ITEM,
-                    //     value: item
-                    // }
                     const action = getSelectItemAction(item);
                     store.dispatch(action);
                 } else {
@@ -209,13 +133,6 @@ export default class Home extends Component {
         } else {
             // 再次点击选中的棋子，取消选中
             if (this.state.selectedItem.id === item.id) {
-                // this.setState({
-                //     selectedItem: ''
-                // });
-                // const action = {
-                //     type: SELECT_ITEM,
-                //     value: ''
-                // }
                 const action = getSelectItemAction('');
                 store.dispatch(action);
                 return;
@@ -235,13 +152,6 @@ export default class Home extends Component {
         const selectedColor = this.state.selectedItem.color;
         // 颜色相同，重新选择
         if (selectedColor == selectedOpponentItem.color && this.state.selectedItem.code !== 'pao') {
-            // this.setState({
-            //     selectedItem: selectedOpponentItem
-            // })
-            // const action = {
-            //     type: SELECT_ITEM,
-            //     value: selectedOpponentItem
-            // }
             const action = getSelectItemAction(item);
             store.dispatch(action);
             return;
@@ -301,67 +211,6 @@ export default class Home extends Component {
         }
         const action = operationAciton(params);
         store.dispatch(action);
-        // axios.get(auth.getPath() + '/operate', { params })
-        // .then((response) => {
-        //     const result = response.data;
-        //     if (result && result.result == 0) {
-        //         if (result.victory) {
-        //             // this.setState({
-        //             //     modalVisible: true
-        //             // })
-        //             // const modalVisibleAction = {
-        //             //     type: OPERATE_MODAL_VISIBLE,
-        //             //     value: true
-        //             // }
-        //             const modalVisibleAction = getOperateModalVisibleAction(true);
-        //             store.dispatch(modalVisibleAction);
-        //         }
-        //         // this.setState({
-        //         //     selectedItem: ''
-        //         // })
-        //         // const action = {
-        //         //     type: SELECT_ITEM,
-        //         //     value: ''
-        //         // }
-        //         const action = getSelectItemAction('');
-        //         store.dispatch(action);
-        //     } else if (result && result.result == 1) {
-        //         message.error(result.msg);
-        //     }
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        //     message.error('操作失败');
-        // })
-        // .then(() => {
-
-        // });
-        // auth.fetch('/operate','get',params,(result)=>{
-        //     if (result && result.result == 0) {
-        //         if (result.victory) {
-        //             // this.setState({
-        //             //     modalVisible: true
-        //             // })
-        //             // const modalVisibleAction = {
-        //             //     type: OPERATE_MODAL_VISIBLE,
-        //             //     value: true
-        //             // }
-        //             const modalVisibleAction = getOperateModalVisibleAction(true);
-        //             store.dispatch(modalVisibleAction);
-        //         }
-        //         // this.setState({
-        //         //     selectedItem: ''
-        //         // })
-        //         // const action = {
-        //         //     type: SELECT_ITEM,
-        //         //     value: ''
-        //         // }
-        //         const action = getSelectItemAction('');
-        //         store.dispatch(action);
-        //     } else if (result && result.result == 1) {
-        //         message.error(result.msg);
-        //     }
-        // });
     }
     
     // 翻子
@@ -370,28 +219,13 @@ export default class Home extends Component {
         let semaphore = this.state.semaphore;
         items[item.x-1][item.y-1].state = 'DISPLAY'; 
         const role = localStorage.getItem('role');
-        // const action = {
-        //     type: REVERSE_CHESS,
-        //     value: {
-        //         items,
-        //         semaphore
-        //     }
-        // }
         if (role == 'CONSUMER') {
             semaphore = 0;
-            // this.setState({
-            //     items,
-            //     semaphore
-            // });
             const action = getReverseChessAction(items, semaphore);
             store.dispatch(action);
             this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
-            // this.setState({
-            //     items,
-            //     semaphore
-            // });
             const action = getReverseChessAction(items, semaphore);
             store.dispatch(action);
             this.commonReverseChess(item.id);
@@ -399,10 +233,6 @@ export default class Home extends Component {
          if (!role) {
             // 第一次翻子
             semaphore = 0;
-            // this.setState({
-            //     items,
-            //     semaphore
-            // });
             const action = getReverseChessAction(items, semaphore)
             store.dispatch(action);
             this.firstReverseChess(item.id, item.color);
@@ -426,45 +256,6 @@ export default class Home extends Component {
         }
         const action = reverseChessAction(params);
         store.dispatch(action);
-        // axios.get(auth.getPath() + '/reverseChess', { params })
-        // .then((response) => {
-        //     const result = response.data;
-        //     if (result && result.result == 1) {
-        //         const state = localStorage.getItem('state');
-        //         let semaphore = this.state.semaphore
-        //         if ("PRODUCER" == state) {
-        //             semaphore += 1;
-        //         } else if ('CONSUMER' == state) {
-        //             semaphore -= 1;
-        //         }
-        //         // this.setState({
-        //         //     semaphore
-        //         // });
-        //         const action = getSetSemaphoreAction(semaphore);
-        //         store.dispatch(action);
-        //     }
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        //     message.error('翻子操作失败');
-        // })
-        // .then(() => {
-
-        // });
-        // auth.fetch('/reverseChess','get',params,(result)=>{
-        //     if (result && result.result == 1) {
-        //         const state = localStorage.getItem('state');
-        //         let semaphore = this.state.semaphore
-        //         if ("PRODUCER" == state) {
-        //             semaphore += 1;
-        //         } else if ('CONSUMER' == state) {
-        //             semaphore -= 1;
-        //         }
-        //         this.setState({
-        //             semaphore
-        //         })
-        //     }
-        // });
     }
     //第一次翻子
     firstReverseChess = (itemId,itemColor) => {
@@ -479,44 +270,6 @@ export default class Home extends Component {
         }
         const action = firstReverseChessAction(params);
         store.dispatch(action);
-        // axios.get(auth.getPath() + '/firstReverseChess', { params })
-        // .then((response) => {
-        //     const result = response.data;
-        //     if (result && result.result == 0) {
-        //         axios.get(auth.getPath() + '/queryPersonById', {id: personId })
-        //         .then((res) => {
-        //             if (res.data) {
-        //                 localStorage.setItem('color', res.color);
-        //                 localStorage.setItem('state', res.state);
-        //             }
-        //         })
-        //         .catch((error) => {
-
-        //         })
-        //         .then(() => {
-
-        //         })
-        //     }
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        //     message.error('第一次翻子操作失败');
-        // })
-        // .then(() => {
-
-        // });
-
-
-        // auth.fetch('/firstReverseChess','get',params,(result)=>{
-        //     if (result && result.result == 0) {
-        //         auth.fetch('/queryPersonById','get',{id: personId},(res)=>{
-        //             if (res) {
-        //                 localStorage.setItem('color', res.color);
-        //                 localStorage.setItem('state', res.state);
-        //             }
-        //         });
-        //     }
-        // });
     }
     handleCancel = (e) => {
         message.success('和局')
@@ -524,62 +277,8 @@ export default class Home extends Component {
     handleReset = (e) => {
         const action = resetAction();
         store.dispatch(action);
-        // axios.get(auth.getPath() + '/initData')
-        // .then((response) => {
-        //     const result = response.data;
-        //     if (result && result.result == 0) {
-        //         message.success('重开成功');
-        //         const action = getHandleResetAction('', '', '', '', 'CONSUMER', 1);
-        //         store.dispatch(action);
-        //     } else {
-        //         message.error('重开失败');
-        //     }
-        // })
-        // .catch((error) => {
-        //     console.log(error);
-        //     message.error('重开操作失败');
-        // })
-        // .then(() => {
-
-        // });
-
-        // auth.fetch('/initData','get','',(result)=>{
-        //     if (result && result.result == 0) {
-        //         message.success('重开成功');
-        //         // const action = {
-        //         //     type: HANDLE_RESET,
-        //         //     value: {
-        //         //         localStorageSetItemRole: '',
-        //         //         localStorageSetItemState: '',
-        //         //         localStorageSetItemColor: '',
-        //         //         selectedItem: '',
-        //         //         role: 'CONSUMER',
-        //         //         semaphore: 1
-        //         //     }
-        //         // }
-        //         const action = getHandleResetAction('', '', '', '', 'CONSUMER', 1);
-        //         store.dispatch(action);
-        //         // localStorage.setItem('role', '');
-        //         // localStorage.setItem('state', '');
-        //         // localStorage.setItem('color', '');
-        //         // this.setState({
-        //         //     selectedItem: '',
-        //         //     role: 'CONSUMER',
-        //         //     semaphore: 1
-        //         // })
-        //     } else {
-        //         message.error('重开失败');
-        //     }
-        // });
     }
     handleModal = () => {
-        // this.setState({
-        //     modalVisible: false
-        // })
-        // const modalVisibleAction = {
-        //     type: OPERATE_MODAL_VISIBLE,
-        //     value: false
-        // }
         const modalVisibleAction = getOperateModalVisibleAction(true);
         store.dispatch(modalVisibleAction);
     }

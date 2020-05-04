@@ -4,7 +4,6 @@ import axios from 'axios';
 import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
-// import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType';
 import { 
     getHandleInputUsernameAction, 
     getHandleInputPasswordAction, 
@@ -15,10 +14,6 @@ import {
 class Login extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //     username: '',
-        //     password: ''
-        // }
         this.state = store.getState();
         store.subscribe(this.handleStoreChange)
     }
@@ -32,34 +27,14 @@ class Login extends Component {
     }
 
     handleInputUsername = (e) => {
-        // const username = e.target.value;
-        // this.setState({
-        //     username
-        // });
-        // const action = {
-        //     type: HANDLE_INPUT_USERNAME,
-        //     value: e.target.value
-        // }
         const action = getHandleInputUsernameAction(e.target.value);
         store.dispatch(action);
     }
     handleInputPassword = (e) => {
-        // const password = e.target.value;
-        // this.setState({
-        //     password
-        // });
-        // const action = {
-        //     type: HANDLE_INPUT_PASSWORD,
-        //     value: e.target.value
-        // }
         const action = getHandleInputPasswordAction(e.target.value);
         store.dispatch(action);
     }
     handleSubmit = (e) => {
-        // this.fetch({
-        //     username: this.state.username,
-        //     password: this.state.password
-        // })
         const action = loginAction(this.state.username, this.state.password);
         store.dispatch(action);
     }
@@ -79,17 +54,6 @@ class Login extends Component {
                 result.data.color ? localStorage.setItem('color', result.data.color):"";
                 window.location.href="./chess";
             } else if (result.result == 1) {
-                // this.setState({
-                //     username: '',
-                //     password: ''
-                // });
-                // const action = {
-                //     type: RESET_USERNAME_PASSWORD,
-                //     value: {
-                //         username: '',
-                //         password: '',
-                //     }
-                // }
                 const action = getResetUsernamePasswordAction('', '');
                 store.dispatch(action);
                 message.error('用户名或密码错误！');
@@ -104,32 +68,6 @@ class Login extends Component {
         .then(() => {
             
         })
-        // auth.fetch('/logins','get',params,(result)=>{
-        //     if (result.result == 0) {
-        //         result.data.id ? localStorage.setItem('id', result.data.id):'';
-        //         result.data.username ? localStorage.setItem('username', result.data.username):'';
-        //         result.data.state ? localStorage.setItem('state', result.data.state):'';
-        //         result.data.role ? localStorage.setItem('role', result.data.role):'';
-        //         result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
-        //         result.data.color ? localStorage.setItem('color', result.data.color):"";
-        //         window.location.href="./chess";
-        //     } else if (result.result == 1) {
-        //         // this.setState({
-        //         //     username: '',
-        //         //     password: ''
-        //         // });
-        //         // const action = {
-        //         //     type: RESET_USERNAME_PASSWORD,
-        //         //     value: {
-        //         //         username: '',
-        //         //         password: '',
-        //         //     }
-        //         // }
-        //         const action = getResetUsernamePasswordAction('', '');
-        //         store.dispatch(action);
-        //         message.error('用户名或密码错误！');
-        //     }
-        // });
     }
     render() {
         const formItemLayout = {
