@@ -3,11 +3,9 @@ package com.chess.controller;
 import com.chess.domain.Person;
 import com.chess.service.ChessService;
 import com.chess.service.PersonService;
+import com.chess.vo.request.LoginRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +31,21 @@ public class PersonController {
         return map;
     }
 
+    @PostMapping("logins")
+    public Map login(@RequestBody LoginRequestVO vo) {
+        Person person = personService.login(vo.getUsername(), vo.getPassword());
+        Map<String, Object> map = new HashMap<>(2);
+        if (Objects.isNull(person)) {
+            map.put("result", 1);
+        } else {
+            map.put("result", 0);
+        }
+        map.put("data", person);
+        return map;
+    }
+
     @GetMapping("queryPersonById")
-    public Person queryChesserById(@RequestParam String id) {
+    public Person queryChesserById(@RequestParam(value = "id") String id) {
         return personService.queryPersonById(id);
     }
 
