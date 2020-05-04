@@ -5,7 +5,12 @@ import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
 // import { HANDLE_INPUT_USERNAME, HANDLE_INPUT_PASSWORD, RESET_USERNAME_PASSWORD } from './../store/actionType';
-import { getHandleInputUsernameAction, getHandleInputPasswordAction, getResetUsernamePasswordAction } from './../store/actionCreators';
+import { 
+    getHandleInputUsernameAction, 
+    getHandleInputPasswordAction, 
+    getResetUsernamePasswordAction,
+    loginAction
+ } from './../store/actionCreators';
 
 class Login extends Component {
     constructor(props) {
@@ -51,10 +56,12 @@ class Login extends Component {
         store.dispatch(action);
     }
     handleSubmit = (e) => {
-        this.fetch({
-            username: this.state.username,
-            password: this.state.password
-        })
+        // this.fetch({
+        //     username: this.state.username,
+        //     password: this.state.password
+        // })
+        const action = loginAction(this.state.username, this.state.password);
+        store.dispatch(action);
     }
     fetch = (params = {}) => {
         axios.post(auth.getPath() + '/logins', params)
