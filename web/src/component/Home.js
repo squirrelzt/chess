@@ -8,6 +8,7 @@ import store from './../store/index';
 import { 
     getInitDataAction, 
     getHandleResetAction,
+    getClearSelectedAndSelectedOpponentAction,
     getLockFrameAction,
     getSelectItemAction,
     getOperateModalVisibleAction,
@@ -160,10 +161,12 @@ export default class Home extends Component {
             }
              // 判断此棋子是否已翻开
              if (item.state == 'NONE') {
-                this.setState({
-                    selectedItem: '',
-                    selectedOpponentItem: ''
-                })
+                // this.setState({
+                //     selectedItem: '',
+                //     selectedOpponentItem: ''
+                // })
+                const action = getClearSelectedAndSelectedOpponentAction('','');
+                store.dispatch(action);
                 this.reverseChess(item);
             } else if (item.state == 'DISPLAY') {
                 if (!color && item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
@@ -415,9 +418,11 @@ export default class Home extends Component {
                 } else if ('CONSUMER' == state) {
                     semaphore -= 1;
                 }
-                this.setState({
-                    semaphore
-                })
+                // this.setState({
+                //     semaphore
+                // });
+                const action = getSetSemaphoreAction(semaphore);
+                store.dispatch(action);
             }
         })
         .catch((error) => {

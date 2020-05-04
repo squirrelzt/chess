@@ -30,6 +30,9 @@ export default (state = defaultState, action) => {
         newState.username = action.value;
     } else if (action.type === HANDLE_INPUT_PASSWORD) {
         newState.password = action.value;
+    } else if (action.type === CLEAR_SELECTED_AND_SELECTED_OPPONENT) {
+        newState.selectedItem = action.value.selectedItem;
+        newState.selectedOpponentItem = action.value.selectedOpponentItem;
     } else if (action.type === RESET_USERNAME_PASSWORD) {
         newState.username = action.value.username;
         newState.password = action.value.password;
@@ -52,6 +55,8 @@ export default (state = defaultState, action) => {
     } else if (action.type === REVERSE_CHESS) {
         newState.items = action.value.items;
         newState.semaphore = action.value.semaphore;
+    } else if (action.type === SET_SEMAPHORE) {
+        newState.semaphore = action.value;
     }
     return newState;
 }

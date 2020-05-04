@@ -20,6 +20,14 @@ export const getHandleInputPasswordAction = (value) => ({
     value
 });
 
+export const getClearSelectedAndSelectedOpponentAction = (selectedItem, selectedOpponentItem) => ({
+    type: CLEAR_SELECTED_AND_SELECTED_OPPONENT,
+    value: {
+        selectedItem,
+        selectedOpponentItem
+    }
+});
+
 export const getResetUsernamePasswordAction = (username, password) => ({
     type: RESET_USERNAME_PASSWORD,
     value: {
@@ -69,6 +77,11 @@ export const getReverseChessAction = (items, semaphore) => ({
         items,
         semaphore
     }
+});
+
+export const getSetSemaphoreAction = (value) => ({
+    type: SET_SEMAPHORE,
+    value
 });
 
 export const getChessAction = () => {
