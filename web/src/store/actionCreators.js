@@ -63,10 +63,16 @@ export const getOperateModalVisibleAction = (value) => ({
     value
 });
 
-export const getReverseChess = (items, semaphore) => ({
+export const getReverseChessAction = (items, semaphore) => ({
     type: REVERSE_CHESS,
     value: {
         items,
         semaphore
     }
 });
+
+export const getChessAction = () => {
+    return () => {
+        
+    }
+}

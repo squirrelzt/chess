@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import {  Form, Icon, Button, message, Input } from 'antd';
+import axios from 'axios';
 import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
@@ -56,10 +57,15 @@ class Login extends Component {
         })
     }
     fetch = (params = {}) => {
-        auth.fetch('/logins','get',params,(result)=>{
+        axios.post(auth.getPath() + '/logins', params)
+        .then((response) => {
+            const result = response.data;
             if (result.result == 0) {
                 result.data.id ? localStorage.setItem('id', result.data.id):'';
                 result.data.username ? localStorage.setItem('username', result.data.username):'';
+                if (result.data.state) {
+                    localStorage.setItem('state', result.data.state);
+                }
                 result.data.state ? localStorage.setItem('state', result.data.state):'';
                 result.data.role ? localStorage.setItem('role', result.data.role):'';
                 result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
@@ -81,7 +87,42 @@ class Login extends Component {
                 store.dispatch(action);
                 message.error('用户名或密码错误！');
             }
-        });
+        })
+        .catch((error) => {
+            console.log(error);
+            const action = getResetUsernamePasswordAction('', '');
+            store.dispatch(action);
+            message.error('用户名或密码错误！');
+        })
+        .then(() => {
+            
+        })
+        // auth.fetch('/logins','get',params,(result)=>{
+        //     if (result.result == 0) {
+        //         result.data.id ? localStorage.setItem('id', result.data.id):'';
+        //         result.data.username ? localStorage.setItem('username', result.data.username):'';
+        //         result.data.state ? localStorage.setItem('state', result.data.state):'';
+        //         result.data.role ? localStorage.setItem('role', result.data.role):'';
+        //         result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
+        //         result.data.color ? localStorage.setItem('color', result.data.color):"";
+        //         window.location.href="./chess";
+        //     } else if (result.result == 1) {
+        //         // this.setState({
+        //         //     username: '',
+        //         //     password: ''
+        //         // });
+        //         // const action = {
+        //         //     type: RESET_USERNAME_PASSWORD,
+        //         //     value: {
+        //         //         username: '',
+        //         //         password: '',
+        //         //     }
+        //         // }
+        //         const action = getResetUsernamePasswordAction('', '');
+        //         store.dispatch(action);
+        //         message.error('用户名或密码错误！');
+        //     }
+        // });
     }
     render() {
         const formItemLayout = {
@@ -96,8 +137,8 @@ class Login extends Component {
                     </div>
                     <Form className='loginForm' >
                         <Form.Item {...formItemLayout}
-                            label='用户名' htmlFor='login-usrename'>
-                            <Input id='login-usrename' onChange={this.handleInputUsername} value={this.state.username}/>
+                            label='用户名' htmlFor='login-username'>
+                            <Input id='login-username' onChange={this.handleInputUsername} value={this.state.username}/>
                         </Form.Item>
                         <Form.Item
                             {...formItemLayout}
