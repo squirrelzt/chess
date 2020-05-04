@@ -12,6 +12,7 @@ import {
     SELECT_ITEM, 
     OPERATE_MODAL_VISIBLE, 
     REVERSE_CHESS,
+    SAGA_LOGIN,
 } from './actionType'
 
 export const getHandleInputUsernameAction = (value) => ({
@@ -125,6 +126,13 @@ export const loginAction = (username, password) => {
     }
 }
 
+export const sagaLoginAction = (username, password) => ({
+    type: SAGA_LOGIN,
+    payload: {
+        username,
+        password
+    }
+})
 export const initDataAction = () => {
     return (dispatch) => {
         axios.get(auth.getPath() + '/query')

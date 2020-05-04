@@ -9,3 +9,5 @@ export const SELECT_ITEM = 'select_item';
 export const OPERATE_MODAL_VISIBLE = 'operate_modal_visible';
 export const REVERSE_CHESS = 'reverse_chess';
 export const SET_SEMAPHORE = 'set_semaphore';
+
+export const SAGA_LOGIN = 'saga_login';

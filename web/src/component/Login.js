@@ -8,7 +8,8 @@ import {
     getHandleInputUsernameAction, 
     getHandleInputPasswordAction, 
     getResetUsernamePasswordAction,
-    loginAction
+    loginAction,
+    sagaLoginAction,
  } from './../store/actionCreators';
 
 class Login extends Component {
@@ -35,39 +36,10 @@ class Login extends Component {
         store.dispatch(action);
     }
     handleSubmit = (e) => {
-        const action = loginAction(this.state.username, this.state.password);
+        // const action = loginAction(this.state.username, this.state.password);
+        // store.dispatch(action);
+        const action = sagaLoginAction(this.state.username, this.state.password);
         store.dispatch(action);
-    }
-    fetch = (params = {}) => {
-        axios.post(auth.getPath() + '/logins', params)
-        .then((response) => {
-            const result = response.data;
-            if (result.result == 0) {
-                result.data.id ? localStorage.setItem('id', result.data.id):'';
-                result.data.username ? localStorage.setItem('username', result.data.username):'';
-                if (result.data.state) {
-                    localStorage.setItem('state', result.data.state);
-                }
-                result.data.state ? localStorage.setItem('state', result.data.state):'';
-                result.data.role ? localStorage.setItem('role', result.data.role):'';
-                result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
-                result.data.color ? localStorage.setItem('color', result.data.color):"";
-                window.location.href="./chess";
-            } else if (result.result == 1) {
-                const action = getResetUsernamePasswordAction('', '');
-                store.dispatch(action);
-                message.error('用户名或密码错误！');
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            const action = getResetUsernamePasswordAction('', '');
-            store.dispatch(action);
-            message.error('用户名或密码错误！');
-        })
-        .then(() => {
-            
-        })
     }
     render() {
         const formItemLayout = {
