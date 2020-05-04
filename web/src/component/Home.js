@@ -12,7 +12,8 @@ import {
     getLockFrameAction,
     getSelectItemAction,
     getOperateModalVisibleAction,
-    getReverseChessAction
+    getReverseChessAction,
+    getSetSemaphoreAction
  } from './../store/actionCreators';
 
 export default class Home extends Component {
