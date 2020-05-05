@@ -30,6 +30,8 @@ function* login(action) {
           message.error('用户名或密码错误！');
       }
     } catch(e) {
+      const action = getResetUsernamePasswordAction('', '');
+      yield put(action);
       console.log(e);
       message.error('登录失败！');
     }

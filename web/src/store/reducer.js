@@ -31,8 +31,6 @@ export default (state = defaultState, action) => {
     const newState = JSON.parse(JSON.stringify(state));
     if (action.type === HANDLE_INPUT_USERNAME) {
         newState.username = action.value;
-        console.log('-----------')
-        console.log(newState.username)
     } else if (action.type === HANDLE_INPUT_PASSWORD) {
         newState.password = action.value;
     } else if (action.type === CLEAR_SELECTED_AND_SELECTED_OPPONENT) {

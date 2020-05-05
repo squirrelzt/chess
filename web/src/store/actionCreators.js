@@ -96,53 +96,12 @@ export const getSetSemaphoreAction = (value) => ({
     value
 });
 
-export const loginAction = (username, password) => {
-    return (dispatch) => {
-        axios.post(auth.getPath() + '/logins', {
-            username,
-            password
-        })
-        .then((response) => {
-            const result = response.data;
-            if (result.result == 0) {
-                result.data.id ? localStorage.setItem('id', result.data.id):'';
-                result.data.username ? localStorage.setItem('username', result.data.username):'';
-                if (result.data.state) {
-                    localStorage.setItem('state', result.data.state);
-                }
-                result.data.state ? localStorage.setItem('state', result.data.state):'';
-                result.data.role ? localStorage.setItem('role', result.data.role):'';
-                result.data.opponentId ? localStorage.setItem('opponentId', result.data.opponentId):"";
-                result.data.color ? localStorage.setItem('color', result.data.color):"";
-                window.location.href="./chess";
-            } else if (result.result == 1) {
-                const action = getResetUsernamePasswordAction('', '');
-                dispatch(action);
-                message.error('用户名或密码错误！');
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            const action = getResetUsernamePasswordAction('', '');
-            dispatch(action);
-            message.error('用户名或密码错误！');
-        })
-        .then(() => {
-            
-        })
-    }
-}
-
 export const sagaLoginAction = (username, password) => ({
     type: SAGA_LOGIN,
     payload: {
         username,
         password
     }
-})
-
-export const reactReduxLoginAction = () => ({
-    type: REACT_REDUX_LOGIN,
 })
 
 export const initDataAction = () => {

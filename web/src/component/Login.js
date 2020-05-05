@@ -1,17 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import {  Form, Icon, Button, message, Input } from 'antd';
-import axios from 'axios';
-import { auth } from '../common/auth';
 import './css/login.less';
 import store from './../store/index';
 import { connect } from 'react-redux';
 import { 
     getHandleInputUsernameAction, 
     getHandleInputPasswordAction, 
-    getResetUsernamePasswordAction,
-    loginAction,
     sagaLoginAction,
-    REACT_REDUX_LOGIN,
  } from './../store/actionCreators';
 
 class Login extends Component {
@@ -33,17 +28,16 @@ class Login extends Component {
         const action = getHandleInputUsernameAction(e.target.value);
         store.dispatch(action);
     }
+
     handleInputPassword = (e) => {
         const action = getHandleInputPasswordAction(e.target.value);
         store.dispatch(action);
     }
+
     handleSubmit = (e) => {
-        // const action = loginAction(this.state.username, this.state.password);
-        // store.dispatch(action);
-        // const action = sagaLoginAction(this.state.username, this.state.password);
-        // store.dispatch(action);
         this.props.handleSubmit(this.state.username, this.state.password)
     }
+    
     render() {
         const formItemLayout = {
             labelCol: { span: 7 },
