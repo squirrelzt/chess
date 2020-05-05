@@ -18,7 +18,14 @@ import {
     operationAciton,
     reverseChessAction,
     firstReverseChessAction,
-    resetAction
+    resetAction,
+
+    sagaInitDataAction,
+    sagaFetchChesserByIdAction,
+    sagaOperationAciton,
+    sagaReverseChessAction,
+    sagaFirstReverseChessAction,
+    sagaResetAction 
  } from './../store/actionCreators';
 
 export default class Home extends Component {
@@ -32,35 +39,21 @@ export default class Home extends Component {
         this.setState(store.getState())
     }
 
-    initData = (data) => {
-        const items = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']];
-        if (data) {
-            data.forEach(element => {
-                items[element.x-1][element.y-1] = element;
-            });
-            // const action = {
-            //     type: INIT_DATA,
-            //     value: items
-            // }
-            const action = getInitDataAction(items);
-            store.dispatch(action);
-            // this.setState({
-            //     items
-            // })
-        }
-    }
-
     componentDidMount = () => {
         const id = localStorage.getItem('id');
         if (id) {
-            const action = initDataAction();
+            // const action = initDataAction();
+            const action = sagaInitDataAction();
             store.dispatch(action);
-            const fetchChessAction = fetchChesserByIdAction({id:id});
+            // const fetchChessAction = fetchChesserByIdAction({id:id});
+            const fetchChessAction = sagaFetchChesserByIdAction(id);
             store.dispatch(fetchChessAction);
             setInterval(()=>{
-                const action = initDataAction();
+                // const action = initDataAction();
+                const action = sagaInitDataAction();
                 store.dispatch(action);
-                const fetchChessAction = fetchChesserByIdAction({id:id});
+                // const fetchChessAction = fetchChesserByIdAction({id:id});
+                const fetchChessAction = sagaFetchChesserByIdAction(id);
                 store.dispatch(fetchChessAction);
             },2000)
         } else {
@@ -209,7 +202,8 @@ export default class Home extends Component {
             opponentId,
             personState
         }
-        const action = operationAciton(params);
+        // const action = operationAciton(params);
+        const action = sagaOperationAciton(chessId, opponentChessId, personId, opponentId, personState);
         store.dispatch(action);
     }
     
@@ -254,7 +248,8 @@ export default class Home extends Component {
             personState,
             chessId: itemId
         }
-        const action = reverseChessAction(params);
+        // const action = reverseChessAction(params);
+        const action = sagaReverseChessAction(personId, opponentId, personState, itemId);
         store.dispatch(action);
     }
     //第一次翻子
@@ -268,14 +263,16 @@ export default class Home extends Component {
             opponentId,
             color: itemColor
         }
-        const action = firstReverseChessAction(params);
+        // const action = firstReverseChessAction(params);
+        const action = sagaFirstReverseChessAction(itemId, personId, opponentId, itemColor);
         store.dispatch(action);
     }
     handleCancel = (e) => {
         message.success('和局')
     }
     handleReset = (e) => {
-        const action = resetAction();
+        // const action = resetAction();
+        const action = sagaResetAction();
         store.dispatch(action);
     }
     handleModal = () => {

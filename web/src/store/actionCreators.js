@@ -12,7 +12,14 @@ import {
     SELECT_ITEM, 
     OPERATE_MODAL_VISIBLE, 
     REVERSE_CHESS,
+
     SAGA_LOGIN,
+    SAGA_INIT_DATA,
+    SAGA_FETCH_CHESSER_BY_ID,
+    SAGA_OPERATION,
+    SAGA_REVERSE_CHESS,
+    SAGA_FIRST_REVERSE_CHESS,
+    SAGA_RESET
 } from './actionType'
 
 export const getHandleInputUsernameAction = (value) => ({
@@ -162,6 +169,10 @@ export const initDataAction = () => {
     }
 }
 
+export const sagaInitDataAction = () => ({
+    type: SAGA_INIT_DATA,
+});
+
 export const fetchChesserByIdAction = (params) => {
     return (dispatch) => {
         axios.get(auth.getPath() + '/queryPersonById', { params })
@@ -197,6 +208,13 @@ export const fetchChesserByIdAction = (params) => {
     }
 }
 
+export const sagaFetchChesserByIdAction = (id) => ({
+    type: SAGA_FETCH_CHESSER_BY_ID,
+    payload: {
+        id
+    }
+});
+
 export const operationAciton = (params) => {
     return (dispatch) => {
         axios.get(auth.getPath() + '/operate', { params })
@@ -222,6 +240,17 @@ export const operationAciton = (params) => {
         });
     }
 }
+
+export const sagaOperationAciton = (chessId, opponentChessId, personId, opponentId, personState) => ({
+    type: SAGA_OPERATION,
+    payload: {
+        chessId,
+        opponentChessId,
+        personId,
+        opponentId,
+        personState
+    }
+});
 
 export const reverseChessAction = (params) => {
     return (dispatch) => {
@@ -249,6 +278,16 @@ export const reverseChessAction = (params) => {
         });
     }
 }
+
+export const sagaReverseChessAction = (personId, opponentId, personState, chessId) => ({
+    type: SAGA_REVERSE_CHESS,
+    payload: {
+        personId,
+        opponentId,
+        personState,
+        chessId
+    }
+});
 
 export const firstReverseChessAction = (params) => {
     return (dispatch) => {
@@ -285,6 +324,16 @@ export const firstReverseChessAction = (params) => {
     }
 }
 
+export const sagaFirstReverseChessAction = (chessId, personId, opponentId, color) => ({
+    type: SAGA_FIRST_REVERSE_CHESS,
+    payload: {
+        chessId,
+        personId,
+        opponentId,
+        color
+    }
+});
+
 export const resetAction = () => {
     return (dispatch) => {
         axios.get(auth.getPath() + '/initData')
@@ -307,3 +356,7 @@ export const resetAction = () => {
         });
     }
 }
+
+export const sagaResetAction = () => ({
+    type: SAGA_RESET
+});

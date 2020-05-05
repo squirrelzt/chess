@@ -11,4 +11,11 @@ export const REVERSE_CHESS = 'reverse_chess';
 export const SET_SEMAPHORE = 'set_semaphore';
 
 export const SAGA_LOGIN = 'saga_login';
+export const SAGA_INIT_DATA = 'saga_init_data';
+export const SAGA_FETCH_CHESSER_BY_ID = 'saga_fetch_chesser_by_id';
+export const SAGA_OPERATION = 'saga_operation';
+export const SAGA_REVERSE_CHESS = 'saga_reverse_chess';
+export const SAGA_FIRST_REVERSE_CHESS = 'first_reverse_chess';
+export const SAGA_RESET = 'saga_reset';
+
 export const REACT_REDUX_LOGIN = 'react_redux_login';
