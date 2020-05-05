@@ -133,6 +133,11 @@ export const sagaLoginAction = (username, password) => ({
         password
     }
 })
+
+export const reactReduxLoginAction = () => ({
+    type: REACT_REDUX_LOGIN,
+})
+
 export const initDataAction = () => {
     return (dispatch) => {
         axios.get(auth.getPath() + '/query')
