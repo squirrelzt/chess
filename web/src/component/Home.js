@@ -5,20 +5,11 @@ import { auth } from '../common/auth';
 import './css/home.less';
 import store from './../store/index';
 import { 
-    getInitDataAction, 
-    getHandleResetAction,
     getClearSelectedAndSelectedOpponentAction,
     getLockFrameAction,
     getSelectItemAction,
     getOperateModalVisibleAction,
     getReverseChessAction,
-    getSetSemaphoreAction,
-    initDataAction,
-    fetchChesserByIdAction,
-    operationAciton,
-    reverseChessAction,
-    firstReverseChessAction,
-    resetAction,
 
     sagaInitDataAction,
     sagaFetchChesserByIdAction,
@@ -42,17 +33,13 @@ export default class Home extends Component {
     componentDidMount = () => {
         const id = localStorage.getItem('id');
         if (id) {
-            // const action = initDataAction();
             const action = sagaInitDataAction();
             store.dispatch(action);
-            // const fetchChessAction = fetchChesserByIdAction({id:id});
             const fetchChessAction = sagaFetchChesserByIdAction(id);
             store.dispatch(fetchChessAction);
             setInterval(()=>{
-                // const action = initDataAction();
                 const action = sagaInitDataAction();
                 store.dispatch(action);
-                // const fetchChessAction = fetchChesserByIdAction({id:id});
                 const fetchChessAction = sagaFetchChesserByIdAction(id);
                 store.dispatch(fetchChessAction);
             },2000)
@@ -202,7 +189,6 @@ export default class Home extends Component {
             opponentId,
             personState
         }
-        // const action = operationAciton(params);
         const action = sagaOperationAciton(chessId, opponentChessId, personId, opponentId, personState);
         store.dispatch(action);
     }
@@ -248,7 +234,6 @@ export default class Home extends Component {
             personState,
             chessId: itemId
         }
-        // const action = reverseChessAction(params);
         const action = sagaReverseChessAction(personId, opponentId, personState, itemId);
         store.dispatch(action);
     }
@@ -263,7 +248,6 @@ export default class Home extends Component {
             opponentId,
             color: itemColor
         }
-        // const action = firstReverseChessAction(params);
         const action = sagaFirstReverseChessAction(itemId, personId, opponentId, itemColor);
         store.dispatch(action);
     }

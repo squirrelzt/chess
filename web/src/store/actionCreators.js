@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { auth } from '../common/auth';
-import { Icon, Row, Col, Button, message, Modal } from 'antd';
+import { message, Modal } from 'antd';
 import { 
     HANDLE_INPUT_USERNAME, 
     HANDLE_INPUT_PASSWORD, 
@@ -104,68 +104,9 @@ export const sagaLoginAction = (username, password) => ({
     }
 })
 
-export const initDataAction = () => {
-    return (dispatch) => {
-        axios.get(auth.getPath() + '/query')
-        .then((response) => {
-            const items = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']];
-            if (response.data) {
-                response.data.forEach(element => {
-                    items[element.x-1][element.y-1] = element;
-                });
-              
-                const action = getInitDataAction(items);
-                dispatch(action);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('查询棋子失败');
-        })
-        .then(() => {
-
-        });
-    }
-}
-
 export const sagaInitDataAction = () => ({
     type: SAGA_INIT_DATA,
 });
-
-export const fetchChesserByIdAction = (params) => {
-    return (dispatch) => {
-        axios.get(auth.getPath() + '/queryPersonById', { params })
-        .then((response) => {
-            const role = response.data.role;
-            const state = response.data.state;
-            const color = response.data.color;
-            role?localStorage.setItem('role', role):'';
-            state?localStorage.setItem('state', state):'';
-            color?localStorage.setItem('color', color):'';
-            if (state && role) {
-                let semaphore = 0;
-                if (state == 'ACTIVE' && role == 'CONSUMER') {
-                    semaphore = 1;
-                } else if (state == 'ACTIVE' && role == 'PRODUCER') {
-                    semaphore = 0;
-                } else if (state == 'LOCK' && role == 'CONSUMER') {
-                    semaphore = 0;
-                } else if (state == 'LOCK' && role == 'PRODUCER') {
-                    semaphore = 1;
-                }
-                const action = getLockFrameAction(semaphore, role);
-                dispatch(action);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('根据id查询用户信息失败');
-        })
-        .then(() => {
-
-        });
-    }
-}
 
 export const sagaFetchChesserByIdAction = (id) => ({
     type: SAGA_FETCH_CHESSER_BY_ID,
@@ -173,32 +114,6 @@ export const sagaFetchChesserByIdAction = (id) => ({
         id
     }
 });
-
-export const operationAciton = (params) => {
-    return (dispatch) => {
-        axios.get(auth.getPath() + '/operate', { params })
-        .then((response) => {
-            const result = response.data;
-            if (result && result.result == 0) {
-                if (result.victory) {
-                    const modalVisibleAction = getOperateModalVisibleAction(true);
-                    dispatch(modalVisibleAction);
-                }
-                const action = getSelectItemAction('');
-                dispatch(action);
-            } else if (result && result.result == 1) {
-                message.error(result.msg);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('操作失败');
-        })
-        .then(() => {
-
-        });
-    }
-}
 
 export const sagaOperationAciton = (chessId, opponentChessId, personId, opponentId, personState) => ({
     type: SAGA_OPERATION,
@@ -211,33 +126,6 @@ export const sagaOperationAciton = (chessId, opponentChessId, personId, opponent
     }
 });
 
-export const reverseChessAction = (params) => {
-    return (dispatch) => {
-        axios.get(auth.getPath() + '/reverseChess', { params })
-        .then((response) => {
-            const result = response.data;
-            if (result && result.result == 1) {
-                const state = localStorage.getItem('state');
-                let semaphore = this.state.semaphore
-                if ("PRODUCER" == state) {
-                    semaphore += 1;
-                } else if ('CONSUMER' == state) {
-                    semaphore -= 1;
-                }
-                const action = getSetSemaphoreAction(semaphore);
-                dispatch(action);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('翻子操作失败');
-        })
-        .then(() => {
-
-        });
-    }
-}
-
 export const sagaReverseChessAction = (personId, opponentId, personState, chessId) => ({
     type: SAGA_REVERSE_CHESS,
     payload: {
@@ -247,41 +135,6 @@ export const sagaReverseChessAction = (personId, opponentId, personState, chessI
         chessId
     }
 });
-
-export const firstReverseChessAction = (params) => {
-    return (dispatch) => {
-        axios.get(auth.getPath() + '/firstReverseChess', { params })
-        .then((response) => {
-            const result = response.data;
-            if (result && result.result == 0) {
-                axios.get(auth.getPath() + '/queryPersonById', { params: {
-                    id: params.personId 
-                    }
-                })
-                .then((res) => {
-                    if (res.data) {
-                        localStorage.setItem('color', res.data.color);
-                        localStorage.setItem('state', res.data.state);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    console.log('根据id查询用户信息失败')
-                })
-                .then(() => {
-
-                })
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            message.error('第一次翻子操作失败');
-        })
-        .then(() => {
-
-        });
-    }
-}
 
 export const sagaFirstReverseChessAction = (chessId, personId, opponentId, color) => ({
     type: SAGA_FIRST_REVERSE_CHESS,
