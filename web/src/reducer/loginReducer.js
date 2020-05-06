@@ -2,7 +2,7 @@ import {
     HANDLE_INPUT_USERNAME, 
     HANDLE_INPUT_PASSWORD, 
     RESET_USERNAME_PASSWORD, 
-} from './actionType'
+} from './../store/actionType'
 
 
 const defaultState = {

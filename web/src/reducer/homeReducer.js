@@ -7,7 +7,7 @@ import {
     OPERATE_MODAL_VISIBLE, 
     REVERSE_CHESS,
     SET_SEMAPHORE,
-} from './actionType'
+} from './../store/actionType'
 
 
 const defaultState = {

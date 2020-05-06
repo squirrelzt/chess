@@ -189,12 +189,6 @@ class Home extends Component {
             localStorage.setItem('state', 'ACTIVE');
         }
         personState = localStorage.getItem('state');
-        let params = {
-            personId,
-            opponentId,
-            personState,
-            chessId: itemId
-        }
         this.props.sagaReverseChess(personId, opponentId, personState, itemId);
     }
     //第一次翻子
@@ -202,12 +196,6 @@ class Home extends Component {
         localStorage.setItem('role','CONSUMER');
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
-        let params = {
-            chessId: itemId,
-            personId,
-            opponentId,
-            color: itemColor
-        }
         this.props.sagaFirstReverseChess(itemId, personId, opponentId, itemColor);
     }
     handleCancel = (e) => {
@@ -225,7 +213,7 @@ class Home extends Component {
                         <Button type="primary" onClick={this.handleCancel}>结束</Button>
                     </div>
                     <div className="chess-container">
-                        {items.map((rowItem,rowIndex)=>{
+                        {items && items.map((rowItem,rowIndex)=>{
                             return (
                                 <Row key={rowIndex}>
                                     {rowItem.map((colItem, colIndex) => {
@@ -266,15 +254,15 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        items: state.items,
-        selectedItem: state.selectedItem,
-        selectedOpponentItem: state.selectedOpponentItem,
-        selectedItemBackgroudColor: state.selectedItemBackgroudColor,
-        data: state.data,
-        started: state.started,
-        semaphore: state.semaphore,
-        role: state.role,
-        modalVisible: state.modalVisible
+        items: state.home.items,
+        selectedItem: state.home.selectedItem,
+        selectedOpponentItem: state.home.selectedOpponentItem,
+        selectedItemBackgroudColor: state.home.selectedItemBackgroudColor,
+        data: state.home.data,
+        started: state.home.started,
+        semaphore: state.home.semaphore,
+        role: state.home.role,
+        modalVisible: state.home.modalVisible
     }
 }
 
