@@ -12,30 +12,30 @@ import {
 class Login extends Component {
     constructor(props) {
         super(props);
-        this.state = store.getState();
-        store.subscribe(this.handleStoreChange)
+        // this.state = store.getState();
+        // store.subscribe(this.handleStoreChange)
     }
 
     componentDidMount = () => {
 
     }
 
-    handleStoreChange = () => {
-        this.setState(store.getState())
-    }
+    // handleStoreChange = () => {
+    //     this.setState(store.getState())
+    // }
 
-    handleInputUsername = (e) => {
-        const action = getHandleInputUsernameAction(e.target.value);
-        store.dispatch(action);
-    }
+    // handleInputUsername = (e) => {
+    //     const action = getHandleInputUsernameAction(e.target.value);
+    //     store.dispatch(action);
+    // }
 
-    handleInputPassword = (e) => {
-        const action = getHandleInputPasswordAction(e.target.value);
-        store.dispatch(action);
-    }
+    // handleInputPassword = (e) => {
+    //     const action = getHandleInputPasswordAction(e.target.value);
+    //     store.dispatch(action);
+    // }
 
     handleSubmit = (e) => {
-        this.props.handleSubmit(this.state.username, this.state.password)
+        this.props.handleSubmit(this.props.username, this.props.password)
     }
     
     render() {

@@ -24,7 +24,8 @@ const defaultState = {
     data: [],
     started: false,
     semaphore: 1,
-    role: 'CONSUMER'
+    role: 'CONSUMER',
+    modalVisible: false
 };
 
 export default (state = defaultState, action) => {
