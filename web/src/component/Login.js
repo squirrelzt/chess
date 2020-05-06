@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import {  Form, Icon, Button, message, Input } from 'antd';
 import './css/login.less';
-import store from './../store/index';
 import { connect } from 'react-redux';
 import { 
     getHandleInputUsernameAction, 
@@ -12,27 +11,11 @@ import {
 class Login extends Component {
     constructor(props) {
         super(props);
-        // this.state = store.getState();
-        // store.subscribe(this.handleStoreChange)
     }
 
     componentDidMount = () => {
 
     }
-
-    // handleStoreChange = () => {
-    //     this.setState(store.getState())
-    // }
-
-    // handleInputUsername = (e) => {
-    //     const action = getHandleInputUsernameAction(e.target.value);
-    //     store.dispatch(action);
-    // }
-
-    // handleInputPassword = (e) => {
-    //     const action = getHandleInputPasswordAction(e.target.value);
-    //     store.dispatch(action);
-    // }
 
     handleSubmit = (e) => {
         this.props.handleSubmit(this.props.username, this.props.password)

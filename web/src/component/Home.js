@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Icon, Row, Col, Button, message, Modal } from 'antd';
-import axios from 'axios';
-import { auth } from '../common/auth';
 import './css/home.less';
-import store from './../store/index';
 import { connect } from 'react-redux';
 import { 
     getClearSelectedAndSelectedOpponentAction,
@@ -23,29 +20,15 @@ import {
 class Home extends Component {
     constructor(props) {
         super(props);
-        // this.state = store.getState();
-        // store.subscribe(this.handleStoreChange)
     }
-    
-    // handleStoreChange = () => {
-    //     this.setState(store.getState())
-    // }
 
     componentDidMount = () => {
         const id = localStorage.getItem('id');
         if (id) {
-            // const action = sagaInitDataAction();
-            // store.dispatch(action);
             this.props.sagaInitData();
-            // const fetchChessAction = sagaFetchChesserByIdAction(id);
-            // store.dispatch(fetchChessAction);
             this.props.sagaFetchChesserById(id);
             setInterval(()=>{
-                // const action = sagaInitDataAction();
-                // store.dispatch(action);
                 this.props.sagaInitData();
-                // const fetchChessAction = sagaFetchChesserByIdAction(id);
-                // store.dispatch(fetchChessAction);
                 this.props.sagaFetchChesserById(id);
             },2000)
         } else {
@@ -67,20 +50,7 @@ class Home extends Component {
         } else if (state == 'LOCK' && role == 'PRODUCER') {
             semaphore = 1;
         }
-        // const action = {
-        //     type: LOCK_FRAME,
-        //     value: {
-        //         semaphore,
-        //         role
-        //     }
-        // }
-        // const action = getLockFrameAction(semaphore, role);
-        // store.dispatch(action);
         this.props.lockFrame(semaphore, role);
-        // this.setState({
-        //     semaphore,
-        //     role
-        // })
     }
     // 点击棋子
     onSelect = (item) => {
@@ -97,8 +67,6 @@ class Home extends Component {
             }
              // 判断此棋子是否已翻开
              if (item.state == 'NONE') {
-                // const action = getClearSelectedAndSelectedOpponentAction('','');
-                // store.dispatch(action);
                 this.props.clearSelectedAndSelectedOpponent('', '');
                 this.reverseChess(item);
             } else if (item.state == 'DISPLAY') {
@@ -110,8 +78,6 @@ class Home extends Component {
                         return;
                     }
                     // 选中要操作的棋子
-                    // const action = getSelectItemAction(item);
-                    // store.dispatch(action);
                     this.props.selectItem(item);
                 } else {
                     this.operateChess(item);
@@ -121,8 +87,6 @@ class Home extends Component {
         } else {
             // 再次点击选中的棋子，取消选中
             if (this.props.selectedItem.id === item.id) {
-                // const action = getSelectItemAction('');
-                // store.dispatch(action);
                 this.props.selectItem('');
                 return;
             }
@@ -141,8 +105,6 @@ class Home extends Component {
         const selectedColor = this.props.selectedItem.color;
         // 颜色相同，重新选择
         if (selectedColor == selectedOpponentItem.color && this.props.selectedItem.code !== 'pao') {
-            // const action = getSelectItemAction(item);
-            // store.dispatch(action);
             this.props.selectItem('');
             return;
         }
@@ -192,15 +154,6 @@ class Home extends Component {
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
         const personState = localStorage.getItem('state');
-        let params = {
-            chessId,
-            opponentChessId,
-            personId,
-            opponentId,
-            personState
-        }
-        // const action = sagaOperationAciton(chessId, opponentChessId, personId, opponentId, personState);
-        // store.dispatch(action);
         this.props.sagaOperation(chessId, opponentChessId, personId, opponentId, personState);
     }
     
@@ -212,22 +165,16 @@ class Home extends Component {
         const role = localStorage.getItem('role');
         if (role == 'CONSUMER') {
             semaphore = 0;
-            // const action = getReverseChessAction(items, semaphore);
-            // store.dispatch(action);
             this.props.reverseChess(items, semaphore);
             this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
-            // const action = getReverseChessAction(items, semaphore);
-            // store.dispatch(action);
             this.props.reverseChess(items, semaphore);
             this.commonReverseChess(item.id);
         }
          if (!role) {
             // 第一次翻子
             semaphore = 0;
-            // const action = getReverseChessAction(items, semaphore)
-            // store.dispatch(action);
             this.props.reverseChess(items, semaphore);
             this.firstReverseChess(item.id, item.color);
         }
@@ -248,8 +195,6 @@ class Home extends Component {
             personState,
             chessId: itemId
         }
-        // const action = sagaReverseChessAction(personId, opponentId, personState, itemId);
-        // store.dispatch(action);
         this.props.sagaReverseChess(personId, opponentId, personState, itemId);
     }
     //第一次翻子
@@ -263,24 +208,13 @@ class Home extends Component {
             opponentId,
             color: itemColor
         }
-        // const action = sagaFirstReverseChessAction(itemId, personId, opponentId, itemColor);
-        // store.dispatch(action);
         this.props.sagaFirstReverseChess(itemId, personId, opponentId, itemColor);
     }
     handleCancel = (e) => {
         message.success('和局')
     }
-    // handleReset = (e) => {
-    //     // const action = resetAction();
-    //     const action = sagaResetAction();
-    //     store.dispatch(action);
-    // }
-    // handleModal = () => {
-    //     const modalVisibleAction = getOperateModalVisibleAction(true);
-    //     store.dispatch(modalVisibleAction);
-    // }
+   
     render() {
-        // const { items, selectedItem, selectedItemBackgroudColor, semaphore, role, modalVisible } = this.state;
         const { items, selectedItem, selectedItemBackgroudColor, semaphore, role, modalVisible,
             handleReset, handleModal } = this.props;
         return (
