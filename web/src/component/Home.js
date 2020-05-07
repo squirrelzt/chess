@@ -158,24 +158,24 @@ class Home extends Component {
     }
     
     // 翻子
-    reverseChess = (item) => {
+    reverseChess = async (item) => {
         let items = this.props.items;
         let semaphore = this.props.semaphore;
         items[item.x-1][item.y-1].props = 'DISPLAY'; 
         const role = localStorage.getItem('role');
         if (role == 'CONSUMER') {
             semaphore = 0;
-            this.props.reverseChess(items, semaphore);
+            await this.props.reverseChess(items, semaphore);
             this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
-            this.props.reverseChess(items, semaphore);
+            await this.props.reverseChess(items, semaphore);
             this.commonReverseChess(item.id);
         }
          if (!role) {
             // 第一次翻子
             semaphore = 0;
-            this.props.reverseChess(items, semaphore);
+            await this.props.reverseChess(items, semaphore);
             this.firstReverseChess(item.id, item.color);
         }
     }
