@@ -45,7 +45,7 @@ class Login extends Component {
             labelCol: { span: 7 },
             wrapperCol: { span: 6 },
         };
-        const { username, password, handleInputUsername, handleInputPassword, handleSubmit } = this.props;
+        const { username, password } = this.props;
         return (
             <Fragment>
                 <div className='login-container'>
@@ -77,29 +77,4 @@ class Login extends Component {
     }
 }
 
-// const mapStateToProps = (state) => {
-//     return {
-//         username: state.login.username,
-//         password: state.login.password
-//     }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         handleInputUsername(e) {
-//             const action = getHandleInputUsernameAction(e.target.value);
-//             dispatch(action);
-//         },
-
-//         handleInputPassword(e) {
-//             const action = getHandleInputPasswordAction(e.target.value);
-//             dispatch(action);
-//         },
-
-//         handleSubmit(username, password){
-//             const action = sagaLoginAction(username, password);
-//             dispatch(action);
-//         }
-//     }
-// }
 export default Login
