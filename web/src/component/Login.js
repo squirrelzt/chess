@@ -8,6 +8,17 @@ import {
     sagaLoginAction,
  } from './../store/actionCreators';
 
+ @connect(
+     state=>({
+        username: state.login.username,
+        password: state.login.password
+     }),
+     {
+        handleInputUsername: getHandleInputUsernameAction,
+        handleInputPassword: getHandleInputPasswordAction,
+        handleSubmit: sagaLoginAction
+     },
+ )
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +26,14 @@ class Login extends Component {
 
     componentDidMount = () => {
 
+    }
+
+    handleInputUsername = (e) => {
+        this.props.handleInputUsername(e.target.value);
+    }
+
+    handleInputPassword = (e) => {
+        this.props.handleInputPassword(e.target.value);
     }
 
     handleSubmit = (e) => {
@@ -36,7 +55,7 @@ class Login extends Component {
                     <Form className='loginForm' >
                         <Form.Item {...formItemLayout}
                             label='用户名' htmlFor='login-username'>
-                            <Input id='login-username' onChange={handleInputUsername} value={username}/>
+                            <Input id='login-username' onChange={this.handleInputUsername} value={username}/>
                         </Form.Item>
                         <Form.Item
                             {...formItemLayout}
@@ -44,7 +63,7 @@ class Login extends Component {
                             htmlFor='login-password'
                             hasFeedback>
                             <Input id='login-password' type="password" autoComplete="off" placeholder="请输入密码"
-                                onChange={handleInputPassword}
+                                onChange={this.handleInputPassword}
                                 value={password}/>
                         </Form.Item>
 
@@ -58,29 +77,29 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        username: state.login.username,
-        password: state.login.password
-    }
-}
+// const mapStateToProps = (state) => {
+//     return {
+//         username: state.login.username,
+//         password: state.login.password
+//     }
+// }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        handleInputUsername(e) {
-            const action = getHandleInputUsernameAction(e.target.value);
-            dispatch(action);
-        },
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         handleInputUsername(e) {
+//             const action = getHandleInputUsernameAction(e.target.value);
+//             dispatch(action);
+//         },
 
-        handleInputPassword(e) {
-            const action = getHandleInputPasswordAction(e.target.value);
-            dispatch(action);
-        },
+//         handleInputPassword(e) {
+//             const action = getHandleInputPasswordAction(e.target.value);
+//             dispatch(action);
+//         },
 
-        handleSubmit(username, password){
-            const action = sagaLoginAction(username, password);
-            dispatch(action);
-        }
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+//         handleSubmit(username, password){
+//             const action = sagaLoginAction(username, password);
+//             dispatch(action);
+//         }
+//     }
+// }
+export default Login
