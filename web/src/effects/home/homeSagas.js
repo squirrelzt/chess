@@ -15,7 +15,8 @@ import {
     getLockFrameAction,
     getSelectItemAction,
     getSetSemaphoreAction,
-    getHandleResetAction
+    getHandleResetAction,
+    getOperateModalVisibleAction
 } from './../../store/actionCreators';
 
 function* initData(action) {
