@@ -1,49 +1,104 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Icon, Row, Col, Button, message, Modal } from 'antd';
-import { auth } from '../common/auth';
-import './css/home.less'
+import './css/home.less';
+import { connect } from 'react-redux';
+import { 
+    getClearSelectedAndSelectedOpponentAction,
+    getLockFrameAction,
+    getSelectItemAction,
+    getOperateModalVisibleAction,
+    getReverseChessAction,
 
-export default class Home extends Component {
+    sagaInitDataAction,
+    sagaFetchChesserByIdAction,
+    sagaOperationAciton,
+    sagaReverseChessAction,
+    sagaFirstReverseChessAction,
+    sagaResetAction 
+ } from './../store/actionCreators';
+
+ @connect(
+    state=>({
+        items: state.home.items,
+        selectedItem: state.home.selectedItem,
+        selectedOpponentItem: state.home.selectedOpponentItem,
+        selectedItemBackgroudColor: state.home.selectedItemBackgroudColor,
+        data: state.home.data,
+        started: state.home.started,
+        semaphore: state.home.semaphore,
+        role: state.home.role,
+        modalVisible: state.home.modalVisible
+    }),
+    {
+        sagaInitData: sagaInitDataAction,
+        sagaFetchChesserById: sagaFetchChesserByIdAction,
+        lockFrame: getLockFrameAction,
+        handleReset: sagaResetAction,
+        handleModal: getOperateModalVisibleAction,
+        clearSelectedAndSelectedOpponent: getClearSelectedAndSelectedOpponentAction,
+        selectItem: getSelectItemAction,
+        sagaOperation: sagaOperationAciton,
+        reverseChess: getReverseChessAction,
+        sagaReverseChess: sagaReverseChessAction,
+        sagaFirstReverseChess: sagaFirstReverseChessAction,
+    }
+)
+class Home extends Component {
     constructor(props) {
         super(props);
-        this.state={
-            items: [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']],
-            selectedItem: '',
-            selectedOpponentItem: '',
-            selectedItemBackgroudColor: '#6387ea',
-            data: [],
-            started: false,
-            semaphore: 1,
-            role: 'CONSUMER'
-        }
     }
-    
-    fetch(params = {}) {
-        auth.fetch('/query','get',params,(result)=>{
-            this.initData(result);
-        });
+    sagaInitDataDispatch = () => {
+        this.props.sagaInitData();
     }
 
-    initData = (data) => {
-        const items = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']];
-        if (data) {
-            data.forEach(element => {
-                items[element.x-1][element.y-1] = element;
-            });
-            this.setState({
-                items
-            })
-        }
+    sagaFetchChesserByIdDispatch = (id) => {
+        this.props.sagaFetchChesserById(id);
     }
 
-    componentDidMount(){
+    lockFrameDispatch = (semaphore, role) => {
+        this.props.lockFrame(semaphore, role);
+    }
+
+    handleResetDispatch = () => {
+        this.props.handleReset();
+    }
+
+    handleModalDispatch = () => {
+        this.props.handleModal(false);
+    }
+
+    clearSelectedAndSelectedOpponentDispatch = (selectedItem, selectedOpponentItem) => {
+        this.props.clearSelectedAndSelectedOpponent(selectedItem, selectedOpponentItem);
+    }
+
+    selectItemDispatch = (item) => {
+        this.props.selectItem(item);
+    }
+
+    sagaOperationDispatch = (chessId, opponentChessId, personId, opponentId, personState) => {
+        this.props.sagaOperation(chessId, opponentChessId, personId, opponentId, personState);
+    }
+
+    reverseChessDispatch = (items, semaphore) => {
+        this.props.reverseChess(items, semaphore);
+    }
+
+    sagaReverseChessDispatch = (personId, opponentId, personState, itemId) => {
+        this.props.sagaReverseChess(personId, opponentId, personState, itemId);
+    }
+
+    sagaFirstReverseChessDispatch = (itemId, personId, opponentId, itemColor) => {
+        this.props.sagaFirstReverseChess(itemId, personId, opponentId, itemColor);
+    }
+
+    componentDidMount = () => {
         const id = localStorage.getItem('id');
         if (id) {
-            this.fetch();
-            this.fetchChesserById({id:id});
+            this.sagaInitDataDispatch();
+            this.sagaFetchChesserByIdDispatch(id);
             setInterval(()=>{
-                this.fetch();
-                this.fetchChesserById({id:id});
+                this.sagaInitDataDispatch();
+                this.sagaFetchChesserByIdDispatch(id);
             },2000)
         } else {
             window.location.href="/login";
@@ -51,20 +106,6 @@ export default class Home extends Component {
         
     }
 
-    //查询页面状态是active还是lock
-    fetchChesserById = (params) => {
-        auth.fetch('/queryPersonById','get',params,(result)=>{
-            const role = result.role;
-            const state = result.state;
-            const color = result.color;
-            localStorage.setItem('role', role);
-            localStorage.setItem('state', state);
-            localStorage.setItem('color', color);
-            if (state && role) {
-                this.lockFrame(state, role);
-            }
-        });
-    }
 
     // 锁定页面
     lockFrame = (state, role) => {
@@ -78,10 +119,7 @@ export default class Home extends Component {
         } else if (state == 'LOCK' && role == 'PRODUCER') {
             semaphore = 1;
         }
-        this.setState({
-            semaphore,
-            role
-        })
+        this.lockFrameDispatch(semaphore, role);
     }
     // 点击棋子
     onSelect = (item) => {
@@ -90,31 +128,26 @@ export default class Home extends Component {
             return;
         }
         // 选己方操作棋子
-        if (!this.state.selectedItem) {
+        if (!this.props.selectedItem) {
             const color = localStorage.getItem('color');
-            if (!color && color !== item.color && "DISPLAY" == item.state) {
+            if (color && color !== item.color && "DISPLAY" == item.state) {
                 message.error('不能操作对方棋子')
                 return;
             }
              // 判断此棋子是否已翻开
              if (item.state == 'NONE') {
-                this.setState({
-                    selectedItem: '',
-                    selectedOpponentItem: ''
-                })
+                this.clearSelectedAndSelectedOpponentDispatch('', '')
                 this.reverseChess(item);
             } else if (item.state == 'DISPLAY') {
-                if (!color && item.color !== localStorage.getItem('color') && !this.state.selectedItem) {
+                if (!color && item.color !== localStorage.getItem('color') && !this.props.selectedItem) {
                     return;
                 }
-                if (!this.state.selectedItem) {
+                if (!this.props.selectedItem) {
                     if (item.code == '') {
                         return;
                     }
                     // 选中要操作的棋子
-                    this.setState({
-                        selectedItem: item
-                    })
+                    this.selectItemDispatch(item);
                 } else {
                     this.operateChess(item);
                 }
@@ -122,13 +155,11 @@ export default class Home extends Component {
             }
         } else {
             // 再次点击选中的棋子，取消选中
-            if (this.state.selectedItem.id === item.id) {
-                this.setState({
-                    selectedItem: ''
-                });
+            if (this.props.selectedItem.id === item.id) {
+                this.selectItemDispatch('');
                 return;
             }
-            if (this.state.selectedItem.color === item.color && this.state.selectedItem.code !== 'pao') {
+            if (this.props.selectedItem.color === item.color && this.props.selectedItem.code !== 'pao') {
                 message.error("相同颜色不能操作");
                 return;
             }
@@ -138,14 +169,12 @@ export default class Home extends Component {
 
     // 兑子，吃子，移动操作
     operateChess = (selectedOpponentItem) => {
-        const selectedX = this.state.selectedItem.x;
-        const selectedY = this.state.selectedItem.y;
-        const selectedColor = this.state.selectedItem.color;
+        const selectedX = this.props.selectedItem.x;
+        const selectedY = this.props.selectedItem.y;
+        const selectedColor = this.props.selectedItem.color;
         // 颜色相同，重新选择
-        if (selectedColor == selectedOpponentItem.color && this.state.selectedItem.code !== 'pao') {
-            this.setState({
-                selectedItem: selectedOpponentItem
-            })
+        if (selectedColor == selectedOpponentItem.color && this.props.selectedItem.code !== 'pao') {
+            this.selectItemDispatch('');
             return;
         }
         if (selectedX != selectedOpponentItem.x && selectedY != selectedOpponentItem.y) {
@@ -161,9 +190,7 @@ export default class Home extends Component {
         }
         localStorage.setItem('state', state);
         this.lockFrame(state, localStorage.getItem('role'));
-        this.operation(this.state.selectedItem, selectedOpponentItem);
-     
-
+        this.operation(this.props.selectedItem, selectedOpponentItem);
     }
 
     operation = (selectedItem, selectedOpponentItem) => {
@@ -196,58 +223,28 @@ export default class Home extends Component {
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
         const personState = localStorage.getItem('state');
-        let params = {
-            chessId,
-            opponentChessId,
-            personId,
-            opponentId,
-            personState
-        }
-        auth.fetch('/operate','get',params,(result)=>{
-            if (result && result.result == 0) {
-
-                if (result.victory) {
-                    this.setState({
-                        modalVisible: true
-                    })
-                }
-                this.setState({
-                    selectedItem: ''
-                })
-            } else if (result && result.result == 1) {
-                message.error(result.msg);
-            }
-        });
+        this.sagaOperationDispatch(chessId, opponentChessId, personId, opponentId, personState);
     }
     
     // 翻子
-    reverseChess = (item) => {
-        let items = this.state.items;
-        let semaphore = this.state.semaphore;
-        items[item.x-1][item.y-1].state = 'DISPLAY'; 
+    reverseChess = async (item) => {
+        let items = this.props.items;
+        let semaphore = this.props.semaphore;
+        items[item.x-1][item.y-1].props = 'DISPLAY'; 
         const role = localStorage.getItem('role');
         if (role == 'CONSUMER') {
             semaphore = 0;
-            this.setState({
-                items,
-                semaphore
-            });
+            await this.reverseChessDispatch(items, semaphore);
             this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
-            this.setState({
-                items,
-                semaphore
-            });
+            await this.reverseChessDispatch(items, semaphore);
             this.commonReverseChess(item.id);
         }
          if (!role) {
             // 第一次翻子
             semaphore = 0;
-            this.setState({
-                items,
-                semaphore
-            });
+            await this.reverseChessDispatch(items, semaphore);
             this.firstReverseChess(item.id, item.color);
         }
     }
@@ -261,98 +258,45 @@ export default class Home extends Component {
             localStorage.setItem('state', 'ACTIVE');
         }
         personState = localStorage.getItem('state');
-        let params = {
-            personId,
-            opponentId,
-            personState,
-            chessId: itemId
-        }
-        auth.fetch('/reverseChess','get',params,(result)=>{
-            if (result && result.result == 1) {
-                const state = localStorage.getItem('state');
-                let semaphore = this.state.semaphore
-                if ("PRODUCER" == state) {
-                    semaphore += 1;
-                } else if ('CONSUMER' == state) {
-                    semaphore -= 1;
-                }
-                this.setState({
-                    semaphore
-                })
-            }
-        });
+        this.sagaReverseChessDispatch(personId, opponentId, personState, itemId);
     }
     //第一次翻子
     firstReverseChess = (itemId,itemColor) => {
         localStorage.setItem('role','CONSUMER');
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
-        let params = {
-            chessId: itemId,
-            personId,
-            opponentId,
-            color: itemColor
-        }
-        auth.fetch('/firstReverseChess','get',params,(result)=>{
-            if (result && result.result == 0) {
-                auth.fetch('/queryPersonById','get',{id: personId},(res)=>{
-                    if (res) {
-                        localStorage.setItem('color', res.color);
-                        localStorage.setItem('state', res.state);
-                    }
-                });
-            }
-        });
+        this.sagaFirstReverseChessDispatch(itemId, personId, opponentId, itemColor);
     }
     handleCancel = (e) => {
         message.success('和局')
     }
-    handleRest = (e) => {
-        auth.fetch('/initData','get','',(result)=>{
-            if (result && result.result == 0) {
-                message.success('重开成功');
-                localStorage.setItem('role', '');
-                localStorage.setItem('state', '');
-                localStorage.setItem('color', '');
-                this.setState({
-                    selectedItem: '',
-                    role: 'CONSUMER',
-                    semaphore: 1
-                })
-            } else {
-                message.error('重开失败');
-            }
-        });
-    }
-    handleModal = () => {
-        this.setState({
-            modalVisible: false
-        })
-    }
+   
     render() {
-        const { items, selectedItem, selectedItemBackgroudColor, semaphore, role } = this.state;
+        const { items, selectedItem, selectedItemBackgroudColor, semaphore, role, modalVisible,
+            handleReset, handleModal } = this.props;
         return (
-            <div className="btn-margin">
+            <Fragment>
                 <div className="monitor-frame">
                     <div className="layout-operation">
-                        <Button type="primary" size="large" onClick={this.handleRest.bind(this)}>重开</Button>
-                        <Button type="primary" onClick={this.handleCancel.bind(this)}>结束</Button>
+                        <Button type="primary" size="large" onClick={handleReset}>重开</Button>
+                        <Button type="primary" onClick={this.handleCancel}>结束</Button>
                     </div>
                     <div className="chess-container">
-                        {items.map((rowItem,rowIndex)=>{
+                        {items && items.map((rowItem,rowIndex)=>{
                             return (
                                 <Row key={rowIndex}>
                                     {rowItem.map((colItem, colIndex) => {
                                         return (
                                             <Col span={3} key={colIndex}>
-                                                <Button shape="circle" 
-                                                style={{color:colItem?colItem.color:'#fff',
-                                                        backgroundColor: colItem.state==='DEAD'?'peru':
-                                                        (selectedItem && (selectedItem.x == colItem.x &&
-                                                            selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan')}}
-                                                onClick={()=>this.onSelect(colItem)}
-                                                disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
-                                                    {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
+                                                <Button className='chess-btn'
+                                                    shape="circle" 
+                                                    style={{color:colItem?colItem.color:'#fff',
+                                                            backgroundColor: colItem.state==='DEAD'?'peru':
+                                                            (selectedItem && (selectedItem.x == colItem.x &&
+                                                                selectedItem.y==colItem.y)?selectedItemBackgroudColor:'tan')}}
+                                                    onClick={()=>this.onSelect(colItem)}
+                                                    disabled={(role=='CONSUMER'&&semaphore==0)||(role=='PRODUCER'&&semaphore==1)}>
+                                                        {colItem && colItem.state == 'DISPLAY'?colItem.name:''}
                                                 </Button>
                                             </Col>
                                         )
@@ -365,14 +309,16 @@ export default class Home extends Component {
                     </div>
                     <Modal
                         title="结束提示"
-                        visible={this.state.modalVisible}
-                        onOk={this.handleModal.bind(this)}
-                        onCancel={this.handleModal.bind(this)}
+                        visible={modalVisible}
+                        onOk={handleModal}
+                        onCancel={handleModal}
                         >
                         <p>恭喜您，赢了本局！</p>
                     </Modal>
                 </div>
-            </div>
+            </Fragment>
         );
     }
 }
+
+export default Home;
