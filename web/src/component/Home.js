@@ -96,13 +96,9 @@ class Home extends Component {
         if (id) {
             this.sagaInitDataDispatch();
             this.sagaFetchChesserByIdDispatch(id);
-            // this.props.sagaInitData();
-            // this.props.sagaFetchChesserById(id);
             setInterval(()=>{
                 this.sagaInitDataDispatch();
                 this.sagaFetchChesserByIdDispatch(id);
-                // this.props.sagaInitData();
-                // this.props.sagaFetchChesserById(id);
             },2000)
         } else {
             window.location.href="/login";
@@ -124,7 +120,6 @@ class Home extends Component {
             semaphore = 1;
         }
         this.lockFrameDispatch(semaphore, role);
-        // this.props.lockFrame(semaphore, role);
     }
     // 点击棋子
     onSelect = (item) => {
@@ -142,7 +137,6 @@ class Home extends Component {
              // 判断此棋子是否已翻开
              if (item.state == 'NONE') {
                 this.clearSelectedAndSelectedOpponentDispatch('', '')
-                // this.props.clearSelectedAndSelectedOpponent('', '');
                 this.reverseChess(item);
             } else if (item.state == 'DISPLAY') {
                 if (!color && item.color !== localStorage.getItem('color') && !this.props.selectedItem) {
@@ -154,7 +148,6 @@ class Home extends Component {
                     }
                     // 选中要操作的棋子
                     this.selectItemDispatch(item);
-                    // this.props.selectItem(item);
                 } else {
                     this.operateChess(item);
                 }
@@ -164,7 +157,6 @@ class Home extends Component {
             // 再次点击选中的棋子，取消选中
             if (this.props.selectedItem.id === item.id) {
                 this.selectItemDispatch('');
-                // this.props.selectItem('');
                 return;
             }
             if (this.props.selectedItem.color === item.color && this.props.selectedItem.code !== 'pao') {
@@ -183,7 +175,6 @@ class Home extends Component {
         // 颜色相同，重新选择
         if (selectedColor == selectedOpponentItem.color && this.props.selectedItem.code !== 'pao') {
             this.selectItemDispatch('');
-            // this.props.selectItem('');
             return;
         }
         if (selectedX != selectedOpponentItem.x && selectedY != selectedOpponentItem.y) {
@@ -233,7 +224,6 @@ class Home extends Component {
         const opponentId = localStorage.getItem('opponentId');
         const personState = localStorage.getItem('state');
         this.sagaOperationDispatch(chessId, opponentChessId, personId, opponentId, personState);
-        // this.props.sagaOperation(chessId, opponentChessId, personId, opponentId, personState);
     }
     
     // 翻子
@@ -245,19 +235,16 @@ class Home extends Component {
         if (role == 'CONSUMER') {
             semaphore = 0;
             await this.reverseChessDispatch(items, semaphore);
-            // await this.props.reverseChess(items, semaphore);
             this.commonReverseChess(item.id);
         } else if (role == 'PRODUCER') {
             semaphore = 1;
             await this.reverseChessDispatch(items, semaphore);
-            // await this.props.reverseChess(items, semaphore);
             this.commonReverseChess(item.id);
         }
          if (!role) {
             // 第一次翻子
             semaphore = 0;
             await this.reverseChessDispatch(items, semaphore);
-            // await this.props.reverseChess(items, semaphore);
             this.firstReverseChess(item.id, item.color);
         }
     }
@@ -272,7 +259,6 @@ class Home extends Component {
         }
         personState = localStorage.getItem('state');
         this.sagaReverseChessDispatch(personId, opponentId, personState, itemId);
-        // this.props.sagaReverseChess(personId, opponentId, personState, itemId);
     }
     //第一次翻子
     firstReverseChess = (itemId,itemColor) => {
@@ -280,7 +266,6 @@ class Home extends Component {
         const personId = localStorage.getItem('id');
         const opponentId = localStorage.getItem('opponentId');
         this.sagaFirstReverseChessDispatch(itemId, personId, opponentId, itemColor);
-        // this.props.sagaFirstReverseChess(itemId, personId, opponentId, itemColor);
     }
     handleCancel = (e) => {
         message.success('和局')
@@ -336,80 +321,4 @@ class Home extends Component {
     }
 }
 
-// const mapStateToProps = (state) => {
-//     return {
-//         items: state.home.items,
-//         selectedItem: state.home.selectedItem,
-//         selectedOpponentItem: state.home.selectedOpponentItem,
-//         selectedItemBackgroudColor: state.home.selectedItemBackgroudColor,
-//         data: state.home.data,
-//         started: state.home.started,
-//         semaphore: state.home.semaphore,
-//         role: state.home.role,
-//         modalVisible: state.home.modalVisible
-//     }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         sagaInitData() {
-//             const action = sagaInitDataAction();
-//             dispatch(action);
-//         },
-        
-//         sagaFetchChesserById(id) {
-//             const fetchChessAction = sagaFetchChesserByIdAction(id);
-//             dispatch(fetchChessAction);
-//         },
-        
-//         lockFrame(semaphore, role) {
-//             const action = getLockFrameAction(semaphore, role);
-//             dispatch(action);
-//         },
-        
-
-//         handleReset() {
-//             const action = sagaResetAction();
-//             dispatch(action);
-//         },
-
-//         handleModal() {
-//             const modalVisibleAction = getOperateModalVisibleAction(false);
-//             dispatch(modalVisibleAction);
-//         },
-
-//         clearSelectedAndSelectedOpponent(selectedItem, selectedOpponentItem) {
-//             const action = getClearSelectedAndSelectedOpponentAction(selectedItem, selectedOpponentItem);
-//             dispatch(action);
-//         },
-
-//         selectItem(item) {
-//             const action = getSelectItemAction(item);
-//             dispatch(action);
-//         },
-        
-//         sagaOperation(chessId, opponentChessId, personId, opponentId, personState) {
-//             const action = sagaOperationAciton(chessId, opponentChessId, personId, opponentId, personState);
-//             dispatch(action);
-//         },
-       
-//         reverseChess(items, semaphore) {
-//             const action = getReverseChessAction(items, semaphore);
-//             dispatch(action);
-//         },
-
-//         sagaReverseChess(personId, opponentId, personState, itemId) {
-//             const action = sagaReverseChessAction(personId, opponentId, personState, itemId);
-//             dispatch(action);
-//         },
-        
-//         sagaFirstReverseChess(itemId, personId, opponentId, itemColor) {
-//             const action = sagaFirstReverseChessAction(itemId, personId, opponentId, itemColor);
-//             dispatch(action);
-//         },
-        
-//     }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(Home);
 export default Home;
