@@ -3,7 +3,6 @@ package com.chess.controller;
 import com.chess.vo.request.LoginRequestVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,9 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.net.URI;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 public class PersonControllerTest {
@@ -42,8 +44,8 @@ public class PersonControllerTest {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/logins")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBodyJson))
-//                .param("username", "zhangsan")
-//                .param("password", "123456"))
+                .andExpect(status().isOk())
+                .andDo(print())
                 .andReturn();
         System.out.println(result);
         Assert.isTrue(result.getResponse().getStatus() == 200, "请求失败,返回码=" + result.getResponse().getStatus() + ", 返回信息=" + result.getResponse().getErrorMessage());
