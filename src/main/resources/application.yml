@@ -1,5 +1,6 @@
 server:
   port: 8090
+  #swagger url:http://localhost:8090/swagger-ui.html (端口和server.port相同)
 
 #spring:
 #  datasource:
