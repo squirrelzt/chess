@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { Icon, Row, Col, Button, message, Modal } from 'antd';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import { auth } from './../common/auth';
 import './css/home.less';
 import { connect } from 'react-redux';
 import { 
+    getInitDataAction,
     getClearSelectedAndSelectedOpponentAction,
     getLockFrameAction,
     getSelectItemAction,
@@ -30,6 +33,7 @@ import {
         modalVisible: state.home.modalVisible
     }),
     {
+        getInitData: getInitDataAction,
         sagaInitData: sagaInitDataAction,
         sagaFetchChesserById: sagaFetchChesserByIdAction,
         lockFrame: getLockFrameAction,
@@ -43,10 +47,17 @@ import {
         sagaFirstReverseChess: sagaFirstReverseChessAction,
     }
 )
+
 class Home extends Component {
+    
     constructor(props) {
         super(props);
     }
+
+    getInitDataDispatch = (items) => {
+        this.props.getInitData(items);
+    }
+
     sagaInitDataDispatch = () => {
         this.props.sagaInitData();
     }
@@ -93,20 +104,63 @@ class Home extends Component {
 
     componentDidMount = () => {
         const id = localStorage.getItem('id');
+        const rws = new ReconnectingWebSocket('ws://localhost:8090/websocket/'+ id);
         if (id) {
+            rws.addEventListener('open', ()=> {
+                rws.send('');
+            });
+            rws.addEventListener('message', e => {
+                if (e.data) {
+                    const wsResultData = JSON.parse(e.data)
+                    this.initData(wsResultData.chess);
+                    this.fetchChesserById(wsResultData.person);
+                }
+            });
             this.sagaInitDataDispatch();
             this.sagaFetchChesserByIdDispatch(id);
-            setInterval(()=>{
-                this.sagaInitDataDispatch();
-                this.sagaFetchChesserByIdDispatch(id);
-            },2000)
+            // setInterval(()=>{
+            //     this.sagaInitDataDispatch();
+            //     this.sagaFetchChesserByIdDispatch(id);
+            // },2000)
         } else {
             window.location.href="/login";
         }
         
     }
 
+    initData = (data) => {
+        const items = [['','','','','','','',''],['','','','','','','',''],['','','','','','','',''],['','','','','','','','']];
+        if (data) {
+            data.forEach(element => {
+                items[element.x-1][element.y-1] = element;
+            });
+            this.getInitDataDispatch(items);
+        }
+    }
 
+    fetchChesserById = (data) => {
+        const role = data.role;
+        const state = data.state;
+        const color = data.color;
+        role?localStorage.setItem('role', role):'';
+        state?localStorage.setItem('state', state):'';
+        color?localStorage.setItem('color', color):'';
+        if (state && role) {
+            let semaphore = 0;
+            if (state == 'ACTIVE' && role == 'CONSUMER') {
+                semaphore = 1;
+            } else if (state == 'ACTIVE' && role == 'PRODUCER') {
+                semaphore = 0;
+            } else if (state == 'LOCK' && role == 'CONSUMER') {
+                semaphore = 0;
+            } else if (state == 'LOCK' && role == 'PRODUCER') {
+                semaphore = 1;
+            }
+            this.lockFrameDispatch(semaphore, role);
+            // const action = getLockFrameAction(semaphore, role);
+            // yield put(action);
+        }
+    }
     // 锁定页面
     lockFrame = (state, role) => {
         let semaphore = 0;

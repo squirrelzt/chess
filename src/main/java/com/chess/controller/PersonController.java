@@ -1,18 +1,24 @@
 package com.chess.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.chess.domain.ChessDomain;
 import com.chess.domain.Person;
 import com.chess.service.ChessService;
 import com.chess.service.PersonService;
+import com.chess.utils.WebSocketUtils;
 import com.chess.vo.request.LoginRequestVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 @RestController
 public class PersonController {
     @Autowired
@@ -67,6 +73,13 @@ public class PersonController {
         } else {
             map.put("result", 1);
         }
+        List<ChessDomain> list = chessService.query();
+        Person person = personService.queryPersonById(personId);
+        Map<String, Object> wsMap = new HashMap<>(2);
+        wsMap.put("chess", list);
+        wsMap.put("person", person);
+        WebSocketUtils.sendMessageAll(JSON.toJSONString(wsMap));
+//        WebSocketUtils.sendMessageAll(JSONArray.toJSONString(chessService.query()));
         return map;
     }
 
@@ -80,6 +93,13 @@ public class PersonController {
         } else {
             map.put("result", 1);
         }
+        List<ChessDomain> list = chessService.query();
+        Person person = personService.queryPersonById(personId);
+        Map<String, Object> wsMap = new HashMap<>(2);
+        wsMap.put("chess", list);
+        wsMap.put("person", person);
+        WebSocketUtils.sendMessageAll(JSON.toJSONString(wsMap));
+//        WebSocketUtils.sendMessageAll(JSONArray.toJSONString(chessService.query()));
         return map;
     }
 }
