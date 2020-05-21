@@ -30,6 +30,9 @@ public interface PersonMapper {
     @Select("select id, username, color, state, role, opponent_id as opponentId from person where id = #{id}")
     List<Person> queryPersonById(@Param("id") String id);
 
+    @Select("select id, username, color, state, role, opponent_id as opponentId from person where id = #{id} or opponent_id = #{id}")
+    List<Person> queryTwoSideById(@Param("id") String id);
+
     @Update("update person set role = 'CONSUMER', state = 'LOCK', color = #{color} where id = #{id}")
     int firstReverseChess(@Param("id") String id, @Param("color") String color);
 

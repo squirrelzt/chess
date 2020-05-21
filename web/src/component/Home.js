@@ -139,9 +139,18 @@ class Home extends Component {
     }
 
     fetchChesserById = (data) => {
-        const role = data.role;
-        const state = data.state;
-        const color = data.color;
+        console.log(data)
+        const id = localStorage.getItem("id");
+        let role;
+        let state ;
+        let color;
+        for (let i=0;i<data.length;i++){
+            if (id == data[i].id) {
+                role = data[i].role;
+                state = data[i].state;
+                color = data[i].color;
+            }
+        }
         role?localStorage.setItem('role', role):'';
         state?localStorage.setItem('state', state):'';
         color?localStorage.setItem('color', color):'';

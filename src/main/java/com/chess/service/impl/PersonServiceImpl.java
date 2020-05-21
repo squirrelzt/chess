@@ -34,6 +34,11 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
+    @Override
+    public List<Person> queryTwoSideById(String id) {
+        return personMapper.queryTwoSideById(id);
+    }
+
     private Person initPerson(String username, String password) {
         List<Person> list = personMapper.queryByUsername(username);
         if (list.isEmpty()) {

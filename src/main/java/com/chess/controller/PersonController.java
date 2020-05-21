@@ -74,10 +74,11 @@ public class PersonController {
             map.put("result", 1);
         }
         List<ChessDomain> list = chessService.query();
-        Person person = personService.queryPersonById(personId);
+//        Person person = personService.queryPersonById(personId);
+        List<Person> persons = personService.queryTwoSideById(personId);
         Map<String, Object> wsMap = new HashMap<>(2);
         wsMap.put("chess", list);
-        wsMap.put("person", person);
+        wsMap.put("person", persons);
         WebSocketUtils.sendMessageAll(JSON.toJSONString(wsMap));
 //        WebSocketUtils.sendMessageAll(JSONArray.toJSONString(chessService.query()));
         return map;
@@ -94,10 +95,11 @@ public class PersonController {
             map.put("result", 1);
         }
         List<ChessDomain> list = chessService.query();
-        Person person = personService.queryPersonById(personId);
+//        Person person = personService.queryPersonById(personId);
+        List<Person> persons = personService.queryTwoSideById(personId);
         Map<String, Object> wsMap = new HashMap<>(2);
         wsMap.put("chess", list);
-        wsMap.put("person", person);
+        wsMap.put("person", persons);
         WebSocketUtils.sendMessageAll(JSON.toJSONString(wsMap));
 //        WebSocketUtils.sendMessageAll(JSONArray.toJSONString(chessService.query()));
         return map;
