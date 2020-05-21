@@ -1,7 +1,9 @@
 package com.chess.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.chess.domain.ChessDomain;
 import com.chess.service.ChessService;
+import com.chess.utils.WebSocketUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,11 @@ public class ChessController {
         boolean flag = chessService.initData();
         if (flag) {
             map.put("result", "0");
+            List<ChessDomain> list = chessService.query();
+            Map<String, Object> wsMap = new HashMap<>(2);
+            wsMap.put("chess", list);
+            wsMap.put("person", null);
+            WebSocketUtils.sendMessageAll(JSON.toJSONString(wsMap));
         } else {
             map.put("result", "1");
         }
