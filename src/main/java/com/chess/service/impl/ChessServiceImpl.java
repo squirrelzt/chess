@@ -8,10 +8,12 @@ import com.chess.mapper.PersonMapper;
 import com.chess.service.ChessService;
 import com.chess.service.PersonService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cursor.Cursor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 
 @Slf4j
@@ -228,6 +230,18 @@ public class ChessServiceImpl implements ChessService {
             map.put("result", "1");
             map.put("msg", "非相邻不能操作");
             return map;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void cursorChess() throws IOException {
+        try (Cursor<ChessDomain> cursor = chessMapper.cursorChess()) {
+//            if (cursor.isOpen() && !cursor.isConsumed()) {
+            if (!cursor.isConsumed()) {
+                System.out.println(cursor.getCurrentIndex());
+                cursor.forEach(chessDomain -> chessDomain.getId());
+            }
         }
     }
 

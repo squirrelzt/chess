@@ -2,6 +2,7 @@ package com.chess.mapper;
 
 import com.chess.domain.ChessDomain;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.cursor.Cursor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -53,4 +54,7 @@ public interface ChessMapper {
 
     @Select("SELECT id, name, code, color, x, y, state, location FROM chess WHERE color = #{color}")
     List<ChessDomain> listRetain(@RequestParam("color") String color);
+
+    @Select("SELECT id, name, code, color, x, y, state, location FROM chess")
+    Cursor<ChessDomain> cursorChess();
 }
