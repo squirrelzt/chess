@@ -17,6 +17,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@babel/runtime": "^7.9.6",
+    "all": "^0.0.0",
     "antd": "^3.19.8",
     "axios": "^0.19.2",
     "bootstrap": "^4.3.1",
