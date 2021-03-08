@@ -1,1 +1,1 @@
-java -jar chess-0.0.1-SNAPSHOT.jar
+java -Dfile.encoding=utf-8 -jar chess-0.0.1-SNAPSHOT.jar
